@@ -1,0 +1,1125 @@
+<!DOCTYPE html><html lang="zh-TW"><head>    
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>澎湖望安中社社區_115年整合式健康促進教學系統</title>    
+    <script src="https://cdn.tailwindcss.com"></script>    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">    
+    <style>        
+        .tab-content { display: none; }        
+        .tab-content.active { display: block; }        
+        .tab-btn.active { border-bottom: 4px solid #1e40af; color: #1e40af; font-weight: bold; }        
+        .theme-btn.active { background-color: #dbeafe; border-color: #1e40af; color: #1e40af; }        
+        .no-scrollbar::-webkit-scrollbar { display: none; }    
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 pb-20">
+
+<!-- ================= 登入區塊 ================= -->
+<div id="login-screen" class="fixed inset-0 bg-blue-900 z-[9999] flex items-center justify-center px-4 transition-all duration-300 bg-cover bg-center" style="background-image: url('wangan-bg.jpg');">
+    <div class="absolute inset-0 bg-blue-950/40 backdrop-blur-sm"></div>
+    <div class="relative bg-white/95 p-8 rounded-3xl shadow-2xl w-full max-w-md space-y-6 text-center border-t-8 border-red-600 backdrop-blur-md">
+        <div>
+            <div class="w-16 h-16 mx-auto mb-3 flex flex-col justify-between p-2 bg-red-600 rounded-xl shadow-md">
+                <div class="flex justify-between text-white text-[10px] font-bold"><span>✖</span><span>✖</span></div>
+                <div class="flex justify-center text-white text-[10px] font-bold"><span>✖</span></div>
+                <div class="flex justify-between text-white text-[10px] font-bold"><span>✖</span><span>✖</span></div>
+            </div>
+            <h2 class="text-xl font-black text-slate-800 tracking-wide">望安中社社區系統登入</h2>
+            <p class="text-xs text-slate-500 mt-1 font-bold">115年整合式健康促進教學系統</p>
+        </div>
+        <div class="space-y-4 text-left">
+            <div>
+                <label class="text-xs font-bold text-slate-500 block mb-1">使用者帳號</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm"><i class="fa-solid fa-user"></i></span>
+                    <input type="text" id="login_user" class="w-full p-2.5 pl-9 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="請輸入帳號">
+                </div>
+            </div>
+            <div>
+                <label class="text-xs font-bold text-slate-500 block mb-1">密碼</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="login_pass" class="w-full p-2.5 pl-9 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="請輸入密碼">
+                </div>
+            </div>
+        </div>
+        <button onclick="checkLogin()" class="w-full bg-blue-700 text-white font-black py-3 rounded-xl shadow-lg hover:bg-blue-800 transition text-sm tracking-wider">
+            <i class="fa-solid fa-right-to-bracket mr-2"></i>安全登入系統
+        </button>
+        <p id="login_error" class="text-xs text-red-600 font-bold hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i>帳號或密碼錯誤，請重新輸入</p>
+    </div>
+</div>
+
+<!-- ================= 主系統區塊 ================= -->
+<div id="main-system" class="opacity-0 pointer-events-none transition-opacity duration-300">
+    <header class="bg-blue-800 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center px-4 sm:px-6">    
+        <div class="flex items-center gap-2 flex-1">
+            <div class="w-8 h-8 flex flex-col justify-between p-1 bg-red-600 rounded shadow-md shrink-0">
+                <div class="flex justify-between text-white text-[6px] font-black"><span>✖</span><span>✖</span></div>
+                <div class="flex justify-center text-white text-[6px] font-black"><span>✖</span></div>
+                <div class="flex justify-between text-white text-[6px] font-black"><span>✖</span><span>✖</span></div>
+            </div>
+            <h1 class="text-sm sm:text-base font-black tracking-wide italic truncate">滾動三力學 ╳ 全人評估 <span class="text-[10px] not-italic bg-yellow-400 text-blue-900 px-1.5 py-0.5 rounded ml-1 font-bold">SPPB 整合版</span></h1>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <div id="identity-badge" class="text-[10px] sm:text-xs bg-blue-950 text-emerald-400 px-2.5 py-1.5 rounded-full font-bold shadow-inner">
+                <i class="fa-solid fa-circle-user mr-1"></i><span id="current-role">訪客</span>
+            </div>
+            <button onclick="handleLogout()" class="text-[10px] sm:text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-black shadow transition flex items-center gap-1">
+                <i class="fa-solid fa-power-off"></i><span>登出</span>
+            </button>
+        </div>
+    </header>
+
+    <nav id="main-nav" class="flex overflow-x-auto bg-white border-b sticky top-[56px] sm:top-[64px] z-40 no-scrollbar shadow-sm">    
+        <button onclick="showTab('base')" id="btn-base" class="tab-btn min-w-[95px] p-4 text-xs active">1.基本資料</button>    
+        <button onclick="showTab('phy')" id="btn-phy" class="tab-btn min-w-[95px] p-4 text-xs">2.行動力</button>    
+        <button onclick="showTab('cog')" id="btn-cog" class="tab-btn min-w-[95px] p-4 text-xs">3.認知力</button>    
+        <button onclick="showTab('psy')" id="btn-psy" class="tab-btn min-w-[95px] p-4 text-xs">4.社會參與力</button>    
+        <button onclick="showTab('result')" id="btn-result" class="tab-btn min-w-[95px] p-4 text-xs text-blue-700 font-black">5.三力處表</button>
+    </nav>
+
+    <main class="container mx-auto px-4 py-6 max-w-2xl">    
+        <!-- 1. 基本資料 -->
+        <section id="tab-base" class="tab-content active space-y-4">        
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">            
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="font-black text-blue-900 text-base"><i class="fa-solid fa-file-invoice mr-2"></i>【一、基本資料】</h2>
+                    <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-bold">版本日期：112年2月</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm">
+                    <div>
+                        <label class="text-xs font-black text-slate-500 block mb-1">評估階段</label>
+                        <div class="flex gap-4 mt-1">
+                            <label class="inline-flex items-center gap-1 font-bold cursor-pointer"><input type="radio" name="b_stage" value="前測" checked class="w-4 h-4 text-blue-600">前測</label>
+                            <label class="inline-flex items-center gap-1 font-bold cursor-pointer"><input type="radio" name="b_stage" value="後測" class="w-4 h-4 text-blue-600">後測</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-black text-slate-500 block mb-1">填寫日期 (國曆)</label>
+                        <input type="date" id="b_date" class="w-full p-1.5 border rounded bg-white text-xs font-bold">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-xs font-black text-slate-500 block mb-1">開課班級</label>
+                        <input type="text" id="b_class" class="w-full p-2 border rounded bg-white text-sm" placeholder="請輸入班級名稱">
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs font-black text-slate-500 block mb-1">姓名</label>
+                            <input type="text" id="b_name" class="w-full p-2 border rounded bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500 font-bold" placeholder="請輸入長者姓名">
+                        </div>
+                        <div>
+                            <label class="text-xs font-black text-slate-500 block mb-1">身分證字號</label>
+                            <input type="text" id="b_id" class="w-full p-2 border rounded bg-white outline-none focus:ring-2 focus:ring-blue-500 uppercase" placeholder="英數共10碼">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="text-xs font-black text-slate-500 block mb-1">性別</label>
+                            <select id="b_gender" onchange="judgeAllPhy()" class="w-full p-2 border rounded bg-white font-bold"><option value="1">1.男</option><option value="2">2.女</option></select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs font-black text-slate-500 block mb-1">生日 (國曆)</label>
+                            <input type="date" id="b_birthday" onchange="calculateAge()" class="w-full p-1.5 border rounded bg-white text-xs font-bold">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="text-xs font-black text-slate-400 block mb-1">計算後年齡</label>
+                            <input type="number" id="b_age" oninput="judgeAllPhy()" class="w-full p-2 border rounded bg-slate-100 font-bold text-center" value="65" readonly>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs font-black text-slate-500 block mb-1">聯絡電話</label>
+                            <input type="tel" id="b_phone" class="w-full p-2 border rounded bg-white text-sm" placeholder="市話或手機">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs font-black text-slate-500 block mb-1">現居縣市</label>
+                            <input type="text" id="b_city" class="w-full p-2 border rounded bg-white text-sm" value="澎湖縣">
+                        </div>
+                        <div>
+                            <label class="text-xs font-black text-slate-500 block mb-1">現居鄉鎮市區</label>
+                            <input type="text" id="b_district" class="w-full p-2 border rounded bg-white text-sm" value="望安鄉">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 bg-slate-50 p-2.5 rounded-xl border text-xs font-bold">
+                        <div>
+                            <label class="text-[11px] font-black text-slate-400 block mb-1">是否為原住民</label>
+                            <div class="flex gap-3 mt-1">
+                                <label class="cursor-pointer"><input type="radio" name="b_indigenous" value="1.是"> 1.是</label>
+                                <label class="cursor-pointer"><input type="radio" name="b_indigenous" value="2.否" checked> 2.否</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-black text-slate-400 block mb-1">居住情況</label>
+                            <div class="flex gap-3 mt-1">
+                                <label class="cursor-pointer"><input type="radio" name="b_living" value="1.獨居"> 1.獨居</label>
+                                <label class="cursor-pointer"><input type="radio" name="b_living" value="2.與親友同住" checked> 2.同住</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs bg-yellow-50 text-yellow-800 p-2.5 rounded-lg border border-yellow-200">
+                        <input type="checkbox" id="b_self_fill" class="w-4 h-4">
+                        <label for="b_self_fill" class="font-bold cursor-pointer">長輩自行填寫問卷請勾選</label>
+                    </div>
+                </div>
+                <div class="border-t pt-3">
+                    <label class="text-xs font-black text-slate-500 block mb-1.5">教育程度</label>
+                    <select id="b_education" class="w-full p-2 border rounded bg-white text-xs font-bold">
+                        <option value="1.不識字">1.不識字</option>
+                        <option value="2.識字，未受正規教育 (含私塾)">2.識字，未受正規教育 (含私塾)</option>
+                        <option value="3.國小" selected>3.國小</option>
+                        <option value="4.國中">4.國中</option>
+                        <option value="5.高中(職)">5.高中(職)</option>
+                        <option value="6.專科大學">6.專科大學</option>
+                        <option value="7.碩士">7.碩士</option>
+                        <option value="8.博士">8.博士</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 健康與疾病史 -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b pb-1"><h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-notes-medical mr-2"></i>健康與疾病史項目</h3></div>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-black text-slate-600 block">◎ 曾被醫師診斷患有下列疾病 (可複選)：</label>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-bold p-3 bg-slate-50 rounded-xl border">
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="0.無" id="dis_none" onchange="toggleDiseaseNone(this)"> 0.無</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="1.高血壓"> 1.高血壓</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="2.心臟疾病"> 2.心臟疾病</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="3.中風"> 3.中風</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="4.肺部/呼吸疾病"> 4.肺部/呼吸疾病</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="5.糖尿病"> 5.糖尿病</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="6.關節炎/風濕"> 6.關節炎/風濕</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="7.骨折"> 7.骨折</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="8.癌症"> 8.癌症</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="disease-cb" value="9.身心科相關疾病"> 9.身心科疾病</label>
+                        <div class="col-span-2 mt-1 flex items-center gap-1 border-t pt-1.5">
+                            <label class="flex items-center gap-1 shrink-0"><input type="checkbox" class="disease-cb" value="10.其他" id="dis_other"> 10.其他：</label>
+                            <input type="text" id="dis_other_text" class="flex-1 p-1 border rounded bg-white text-xs" placeholder="請註明其他疾病">
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-black text-slate-600 block">◎ 自覺有下列健康問題 (可複選)：</label>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-bold p-3 bg-slate-50 rounded-xl border">
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="0.無" id="prob_none" onchange="toggleProbNone(this)"> 0.無</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="1.憂鬱/焦慮/情緒問題"> 1.憂鬱/焦慮/情緒</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="2.頸背問題(如痠痛)"> 2.頸背問題(痠痛)</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="3.行走問題"> 3.行走問題</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="4.睡眠問題"> 4.睡眠問題</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="5.視力問題"> 5.視力問題</label>
+                        <label class="flex items-center gap-1.5"><input type="checkbox" class="prob-cb" value="6.聽力問題"> 6.聽力問題</label>
+                        <div class="col-span-2 mt-1 flex items-center gap-1 border-t pt-1.5">
+                            <label class="flex items-center gap-1 shrink-0"><input type="checkbox" class="prob-cb" value="7.其他" id="prob_other"> 7.其他：</label>
+                            <input type="text" id="prob_other_text" class="flex-1 p-1 border rounded bg-white text-xs" placeholder="請註明其他健康問題">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 長者功能自評量表 -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b pb-1">
+                    <h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-clipboard-check mr-2"></i>長者功能自評量表 (長者自評版)</h3>
+                </div>
+                <p class="text-xs text-slate-500 mb-2">請引導長輩依據過去三個月至一年的狀況回答下列問題：</p>
+                
+                <div class="space-y-3">
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">1. (認知功能) 您最近一年來，是否有記憶明顯減退的情形？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_1" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_1" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">2. (行動功能) 您是否出現以下任一種情況？(非常擔心跌倒 / 過去一年內曾跌倒 / 需抓東西才能站起)</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_2" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_2" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">3. (營養不良) 在非刻意減重的情況下，過去三個月，您的體重是否減輕3公斤或以上？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_3" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_3" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">4. (營養不良) 過去三個月，您是否曾經食慾不好？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_4" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_4" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">5. (視力障礙) 您的眼睛看遠、看近或閱讀是否有困難？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_5" value="是" onchange="document.getElementById('icope_5_1_box').classList.remove('hidden')"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_5" value="否" checked onchange="document.getElementById('icope_5_1_box').classList.add('hidden')"> 否</label>
+                        </div>
+                    </div>
+                    <div id="icope_5_1_box" class="bg-red-50 p-3 rounded-xl border border-red-200 hidden ml-4">
+                        <label class="text-xs font-bold text-red-800 block mb-2">5-1. (視力延伸) 您過去1年是否"曾"接受眼睛檢查？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_5_1" value="是" checked> 是</label>
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_5_1" value="否"> 否 (異常)</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">6. (聽力障礙) 您的聽力是否出現以下任一種情況？(聽不清/開太大聲/需提高音量/因聽力不想參加活動)</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_6" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_6" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">7. (憂鬱) 過去兩週，您是否常感到厭煩(心煩或「阿雜」)，或覺得生活沒有希望？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_7" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_7" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <label class="text-xs font-bold text-slate-700 block mb-2">8. (憂鬱) 過去兩週，您是否減少很多的活動和原本您感興趣的事？</label>
+                        <div class="flex gap-4 text-xs font-bold">
+                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_8" value="是"> 是 (異常)</label>
+                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_8" value="否" checked> 否</label>
+                        </div>
+                    </div>
+                    <div class="text-[10px] text-slate-400 bg-slate-100 p-2 rounded">
+                        * 以上功能評估結果如有異常，可於回診時請教醫師，或查找長者社區資源整合運用平台。
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 2. 行動力 (肌力與 SPPB) -->
+        <section id="tab-phy" class="tab-content space-y-6">        
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex items-center gap-1 border-b pb-2"><span class="text-blue-800 text-lg"><i class="fa-solid fa-dumbbell"></i></span><h2 class="font-black text-blue-900 text-base"> 基礎功能常模測試</h2></div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="p-3 bg-slate-50 rounded-xl border">                    
+                        <label class="text-xs font-black block mb-1 text-slate-600">30秒椅子坐立 (次數)</label>                    
+                        <input type="number" id="p_chair" oninput="judgeAllPhy()" class="w-full p-2.5 border rounded-xl text-lg font-black text-blue-700 bg-white" placeholder="0">                        
+                        <div id="r_chair" class="mt-2 text-center font-bold text-xs text-blue-800 bg-white py-1.5 rounded-lg border shadow-sm">--</div>                    
+                    </div>                
+                    <div class="p-3 bg-slate-50 rounded-xl border">                    
+                        <label class="text-xs font-black block mb-1 text-slate-600">手臂屈舉 (次數)</label>                    
+                        <input type="number" id="p_arm" oninput="judgeAllPhy()" class="w-full p-2.5 border rounded-xl text-lg font-black text-blue-700 bg-white" placeholder="0">                        
+                        <div id="r_arm" class="mt-2 text-center font-bold text-xs text-blue-800 bg-white py-1.5 rounded-lg border shadow-sm">--</div>                    
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border">                    
+                        <label class="text-xs font-black block mb-1 text-slate-600">最大握力 (kg)</label>                    
+                        <input type="number" step="0.1" id="p_grip" oninput="judgeAllPhy()" class="w-full p-2.5 border rounded-xl text-lg font-black text-blue-700 bg-white" placeholder="0.0">                        
+                        <div id="r_grip" class="mt-2 text-center font-bold text-xs text-blue-800 bg-white py-1.5 rounded-lg border shadow-sm">--</div>                    
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-2 border-blue-200 space-y-5">            
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="font-black text-blue-900 text-base"><i class="fa-solid fa-running mr-2 text-blue-700"></i>SPPB 簡易身體表現功能量表</h2>
+                    <div class="text-right"><span class="text-xs font-black text-blue-800 bg-blue-100 px-3 py-1 rounded-full shadow-inner">SPPB 目前總分：<span id="sppb_live_total" class="text-sm text-red-600 font-black">0</span> / 12 分</span></div>
+                </div>            
+                
+                <div class="p-4 bg-slate-50 rounded-2xl border space-y-3">
+                    <h3 class="text-xs font-black text-slate-700 flex items-center gap-1"><i class="fa-solid fa-scale-balanced text-blue-600"></i> 1. 平衡測試 (每種站法目標10秒)</h3>
+                    <div class="space-y-3 text-xs font-bold">
+                        <div class="bg-white p-2.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+                            <div>A. 並排站立 <span class="text-[10px] text-slate-400 block sm:inline sm:ml-1">(Side-by-side stand)</span></div>
+                            <div class="flex items-center gap-2"><select id="sppb_bal_a" onchange="judgeAllPhy()" class="p-1.5 border rounded bg-slate-50 text-xs"><option value="1">保持 10 秒 (1分)</option><option value="0">少於 10 秒 (0分)</option></select></div>
+                        </div>
+                        <div class="bg-white p-2.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+                            <div>B. 半並排站立 <span class="text-[10px] text-slate-400 block sm:inline sm:ml-1">(Semi-tandem stand)</span></div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold">符合基準 (固定計 1 分)</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-2.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+                            <div>C. 直線站立 <span class="text-[10px] text-slate-400 block sm:inline sm:ml-1">(Tandem stand)</span></div>
+                            <div class="flex items-center gap-2"><select id="sppb_bal_c" onchange="judgeAllPhy()" class="p-1.5 border rounded bg-slate-50 text-xs"><option value="2">保持 10 秒 (2分)</option><option value="1">保持 3 ~ 9.99 秒 (1分)</option><option value="0">保持 &lt; 3 秒 (0分)</option></select></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-2xl border space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <h3 class="text-xs font-black text-slate-700 flex items-center gap-1"><i class="fa-solid fa-stopwatch text-green-600"></i> 2. 步行速度測試 (請選擇距離施測)</h3>
+                        <div class="flex gap-4 text-xs font-black">
+                            <label class="cursor-pointer flex items-center gap-1 text-green-700"><input type="radio" name="sppb_gait_dist" value="4" checked onchange="judgeAllPhy()" class="w-4 h-4"> 四公尺</label>
+                            <label class="cursor-pointer flex items-center gap-1 text-green-700"><input type="radio" name="sppb_gait_dist" value="3" onchange="judgeAllPhy()" class="w-4 h-4"> 三公尺</label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1 relative">
+                            <input type="number" id="p_gait" step="0.01" oninput="judgeAllPhy()" class="w-full p-3 border rounded-xl text-xl font-black text-green-700 bg-white pr-10" placeholder="0.00">
+                            <span class="absolute right-3 top-3.5 text-xs text-slate-400 font-bold">秒</span>
+                        </div>
+                        <div id="sppb_gait_score" class="w-28 text-center font-black text-xs text-green-800 bg-white py-3 rounded-xl border shadow-sm">0 分</div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-2xl border space-y-3">
+                    <h3 class="text-xs font-black text-slate-700 flex items-center gap-1"><i class="fa-solid fa-chair text-purple-600"></i> 3. 椅子起站測試 (連續起立坐下五次的時間)</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1 relative">
+                            <input type="number" id="sppb_chair_time" step="0.01" oninput="judgeAllPhy()" class="w-full p-3 border rounded-xl text-xl font-black text-purple-700 bg-white pr-10" placeholder="0.00">
+                            <span class="absolute right-3 top-3.5 text-xs text-slate-400 font-bold">秒</span>
+                        </div>
+                        <div id="sppb_chair_score" class="w-28 text-center font-black text-xs text-purple-800 bg-white py-3 rounded-xl border shadow-sm">0 分</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 認知力 (Mini-Cog™) -->
+        <section id="tab-cog" class="tab-content space-y-4">        
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">            
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="font-black text-blue-900 text-base"><i class="fa-solid fa-brain mr-2 text-blue-700"></i>Mini-Cog™ 失智症篩檢量表</h2>
+                    <span class="text-xs font-bold text-slate-400">S. Borson 版權所有</span>
+                </div>            
+                
+                <div>
+                    <label class="text-xs font-black text-slate-600 block mb-2">請點選題組清單進行施測：</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        <button onclick="setMiniCogTheme('1')" id="mc1" class="theme-btn py-2 border rounded-xl text-xs bg-white font-bold transition">第 1 版</button>
+                        <button onclick="setMiniCogTheme('2')" id="mc2" class="theme-btn py-2 border rounded-xl text-xs bg-white font-bold transition">第 2 版</button>
+                        <button onclick="setMiniCogTheme('3')" id="mc3" class="theme-btn py-2 border rounded-xl text-xs bg-white font-bold transition">第 3 版</button>
+                        <button onclick="setMiniCogTheme('4')" id="mc4" class="theme-btn py-2 border rounded-xl text-xs bg-white font-bold transition">第 4 版</button>
+                        <button onclick="setMiniCogTheme('5')" id="mc5" class="theme-btn py-2 border rounded-xl text-xs bg-white font-bold transition">第 5 版</button>
+                        <button onclick="setMiniCogTheme('6')" id="mc6" class="theme-btn py-2 border rounded-xl text-xs bg-white font-bold transition">第 6 版</button>
+                    </div>
+                </div>
+
+                <!-- 步驟 1 -->
+                <div class="p-3.5 bg-blue-50/60 text-slate-800 rounded-xl border border-blue-100 space-y-2 text-xs">
+                    <p class="font-black text-blue-900"><i class="fa-solid fa-circle-info mr-1"></i>步驟 1：三個名詞記憶</p>
+                    <p class="italic text-slate-600 font-medium leading-relaxed">請指導員看著長者說：「請仔細聽清楚，我等一下會說出三個名詞，請馬上複誦給我聽，然後儘量背下來。」</p>
+                    <div id="mc-word-display" class="p-3 bg-white text-blue-800 text-sm text-center rounded-xl border border-blue-200 hidden font-black tracking-widest italic"></div>
+                    
+                    <div class="mt-3 flex items-center justify-between bg-white p-2.5 rounded-xl border">
+                        <span class="font-bold text-slate-700">第一步驟馬上複誦結果：</span>
+                        <div class="flex gap-3 text-xs font-bold">
+                            <label class="cursor-pointer text-green-700 bg-green-50 px-2 py-1 rounded"><input type="radio" name="mc_step1_status" value="通過" checked> 通過</label>
+                            <label class="cursor-pointer text-red-600 bg-red-50 px-2 py-1 rounded"><input type="radio" name="mc_step1_status" value="不通過"> 不通過 (失敗三次)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 步驟 2 -->
+                <div class="p-3.5 bg-purple-50/60 text-slate-800 rounded-xl border border-purple-100 space-y-2 text-xs">
+                    <p class="font-black text-purple-900"><i class="fa-solid fa-clock mr-1"></i>步驟 2：畫時鐘測驗 (CDT)</p>
+                    <p class="italic text-slate-600 font-medium leading-relaxed">請引導長者在紙上畫出時鐘，包含數字，並將指針設在 <strong class="text-purple-700 font-black">11:10</strong>。</p>
+                    <div class="mt-2 flex items-center justify-between bg-white p-2.5 rounded-xl border">
+                        <span class="font-bold text-slate-700">畫時鐘評分標準判定：</span>
+                        <select id="mc_clock_score_select" onchange="judgeAllPhy()" class="p-1.5 border rounded bg-slate-50 text-xs font-black text-purple-700">
+                            <option value="2">正常時鐘 (2分) - 數字與方位針指向均正確</option>
+                            <option value="0">異常時鐘 (0分) - 有漏字、錯位或畫不出</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-3 bg-white p-3 rounded-xl border border-purple-200 border-dashed">
+                        <label class="text-xs font-bold text-slate-600 block mb-2"><i class="fa-solid fa-camera mr-1"></i>上傳或拍攝長者畫的時鐘：</label>
+                        <input type="file" id="clock_image_input" accept="image/*" capture="environment" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" onchange="previewClockImage(event)">
+                        <div id="clock_image_preview_container" class="mt-3 hidden">
+                            <img id="clock_image_preview" src="" alt="時鐘預覽" class="w-full max-w-[200px] h-auto rounded-lg border shadow-sm mx-auto">
+                            <button onclick="clearClockImage()" class="mt-2 text-xs text-red-600 bg-red-50 px-3 py-1 rounded-lg w-full font-bold hover:bg-red-100">移除圖片</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 步驟 3 -->
+                <div class="p-3.5 bg-emerald-50/60 text-slate-800 rounded-xl border border-emerald-100 space-y-2 text-xs">
+                    <p class="font-black text-emerald-900"><i class="fa-solid fa-quote-left mr-1"></i>步驟 3：三個名詞回憶</p>
+                    <p class="italic text-slate-600 font-medium leading-relaxed">請對長者說：「我要你背下來的三個名詞是什麼？」請勾選長者無提示成功回想出的名詞：</p>
+                    
+                    <div id="mc_recall_checkboxes" class="grid grid-cols-3 gap-2 text-center pt-1">
+                        <!-- JavaScript動態生成 -->
+                    </div>
+                    
+                    <div class="text-right text-emerald-800 font-black mt-2">
+                        名詞回憶得分：<span id="mc_recall_score_display" class="text-lg">0</span> 分
+                    </div>
+                </div>
+            </div>    
+        </section>
+
+        <!-- 4. 社會參與力 (GDS) -->
+        <section id="tab-psy" class="tab-content">
+            <div class="bg-white p-6 rounded-2xl border border-purple-200 shadow-sm">
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h2 class="font-bold text-purple-900 text-base"><i class="fa-solid fa-heart-pulse mr-2"></i>社會參與力與情緒篩檢 (GDS-15)</h2>
+                    <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-bold">衛生福利部標準</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4 leading-relaxed">請引導長者根據「最近一週內」的真實感受回答下列問題。系統會自動計算憂鬱指數：</p>
+                <div class="space-y-3 max-h-[420px] overflow-y-auto pr-1 text-sm" id="gds-questions-container"></div>
+            </div>
+        </section>
+        
+        <!-- 5. 三力處表 -->
+        <section id="tab-result" class="tab-content space-y-6">
+            <div id="action-panel" class="p-6 bg-blue-50 rounded-3xl border-2 border-blue-200 text-center space-y-4">
+                <button onclick="generateFinalReport()" class="w-full bg-blue-700 text-white font-black py-4 rounded-2xl shadow-xl hover:bg-blue-800 transition"><i class="fa-solid fa-chart-pie mr-2"></i>第一步：產生報表與三力學處方</button>
+                <button id="saveBtn" onclick="submitToGoogle()" class="hidden w-full bg-green-600 text-white font-black py-4 rounded-2xl shadow-xl hover:bg-green-700 transition"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>第二步：上傳資料至試算表</button>
+            </div>
+            
+            <div id="final-report" class="hidden bg-white p-6 rounded-[32px] border-t-[12px] border-blue-700 shadow-2xl space-y-6">
+                <div class="text-center">
+                    <h2 class="text-2xl font-black text-blue-900 tracking-wide">115年度長者健康促進方案 ╳ 滾動三力學處方</h2>
+                    <p class="text-xs text-slate-400 mt-1 font-bold">澎湖望安中社社區_115年整合式健康促進教學系統</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 text-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">受試者姓名</p><p id="rn" class="font-black text-xl text-slate-800 mt-1">--</p></div>
+                    <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">全人功能總分</p><p id="rt" class="font-black text-3xl text-blue-600 mt-1">--</p></div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-bold text-slate-700 mb-2"><i class="fa-solid fa-chart-bar mr-2 text-blue-600"></i>ICOPE 整合式功能維度分析</h3>
+                    <div id="score_bars" class="space-y-3 px-1"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <div id="status_box" class="p-3 rounded-xl text-center shadow-sm font-black text-white bg-slate-400"><p id="rs" class="text-sm">--</p></div>
+                    <div id="sppb_status_box" class="p-3 rounded-xl text-center shadow-sm font-black text-white bg-slate-400"><p id="sppb_rs" class="text-sm">--</p></div>
+                    <div id="gds_status_box" class="p-3 rounded-xl text-center shadow-sm font-black text-white bg-slate-400"><p id="gds_rs" class="text-sm">--</p></div>
+                </div>
+
+                <hr class="border-dashed border-slate-300">
+
+                <div class="bg-gradient-to-br from-slate-50 to-blue-50 p-5 rounded-2xl border border-slate-200">
+                    <h3 class="text-base font-black text-blue-900 mb-2 text-center"><i class="fa-solid fa-circle-dot text-red-500 mr-2"></i>滾動三力學（Boccia）在地整合介入方案</h3>
+                    <p class="text-xs text-slate-600 mb-4 text-center">依據受試者弱項進行動態加強，搭配12週模組化教材與五階段固定流程帶課：</p>
+                    
+                    <div class="space-y-3 text-sm">
+                        <div id="rx_cog" class="p-3 bg-white rounded-xl border flex gap-3 shadow-sm">
+                            <div class="text-emerald-600 text-lg mt-0.5"><i class="fa-solid fa-brain"></i></div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-slate-800">思考力模組 (認知任務)</h4>
+                                    <span id="badge_cog" class="hidden text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">優先加強</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1">**教學重點**：著重於第5-8週「雙任務與變化」階段。在投擲時結合記憶與反應任務。利用戰術制定提升空間判斷與策略思考。</p>
+                            </div>
+                        </div>
+                        
+                        <div id="rx_phy" class="p-3 bg-white rounded-xl border flex gap-3 shadow-sm">
+                            <div class="text-blue-600 text-lg mt-0.5"><i class="fa-solid fa-dumbbell"></i></div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-slate-800">行動力模組 (維持身體功能)</h4>
+                                    <span id="badge_phy" class="hidden text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">優先加強</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1">**教學重點**：加強第1-4週「基礎建立」之力量分級微調。著重課程前20分鐘「身體啟動」暖身，動員上肢、下肢與軀幹肌群，提升動態平衡與行走速度。</p>
+                            </div>
+                        </div>
+                        
+                        <div id="rx_psy" class="p-3 bg-white rounded-xl border flex gap-3 shadow-sm">
+                            <div class="text-indigo-600 text-lg mt-0.5"><i class="fa-solid fa-users"></i></div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-slate-800">關係力模組 (團隊互動與支持)</h4>
+                                    <span id="badge_psy" class="hidden text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">優先加強</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1">**教學重點**：切入第9-12週「策略整合與團隊」階段。運用30分鐘的「團體策略」時間建立角色分工、促進溝通，經由長者回訓合格之指導員帶領成果分享週，能顯著調控情緒智力、降低 GDS 憂鬱分數、大增自我效能。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600">
+                    <div class="font-bold text-slate-700 mb-2 flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-blue-700"></i> 指導員課堂標準五階段執行規範（每堂 120 分鐘）：</div>
+                    <div class="grid grid-cols-5 gap-1 text-center font-bold text-[10px] text-slate-500">
+                        <div class="bg-white p-1 rounded border">身體啟動<br><span class="text-blue-600">20分</span></div>
+                        <div class="bg-white p-1 rounded border">技能建構<br><span class="text-blue-600">25分</span></div>
+                        <div class="bg-white p-1 rounded border">認知任務<br><span class="text-blue-600">25分</span></div>
+                        <div class="bg-white p-1 rounded border">團體策略<br><span class="text-blue-600">30分</span></div>
+                        <div class="bg-white p-1 rounded border">經驗整合<br><span class="text-blue-600">20分</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🔒 管理者帳號面板 -->
+            <div id="admin-management-panel" class="hidden bg-slate-900 text-white p-6 rounded-[32px] shadow-2xl border-t-[8px] border-emerald-500 space-y-4">
+                <div class="flex items-center gap-2 border-b border-slate-700 pb-2">
+                    <span class="text-emerald-400 text-lg"><i class="fa-solid fa-users-gear"></i></span>
+                    <h3 class="font-black text-sm tracking-wide">🔒 系統帳號管理後台 (最高權限專屬)</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-800">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">新帳號</label>
+                        <input type="text" id="new_username" class="w-full p-2 rounded bg-white outline-none" placeholder="例如：staff116">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">密碼</label>
+                        <input type="text" id="new_password" class="w-full p-2 rounded bg-white outline-none" placeholder="例如：pass123">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 mb-1">指派身分</label>
+                        <select id="new_role" class="w-full p-2 rounded bg-white outline-none font-bold">
+                            <option value="staff">一般員工 / 操作員</option>
+                            <option value="guest">外部檢視者 (訪客)</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="addNewAccount()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl transition text-xs shadow-md">
+                    <i class="fa-solid fa-user-plus mr-1"></i>確認新增此帳號
+                </button>
+                <div class="pt-2">
+                    <p class="text-[10px] font-bold text-slate-400 mb-1.5"><i class="fa-solid fa-list mr-1"></i>現存用戶清單：</p>
+                    <div id="account-list-display" class="space-y-1 max-h-[120px] overflow-y-auto text-[11px] pr-1"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- 置放隱藏 ICOPE 步行中轉站標籤 -->
+<span id="s_gait_backup" class="hidden">0 分</span>
+
+<!-- ================= 💻 核心驅動引擎 ================= -->
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyDZLru4UqhdHZgYc1IB6sjvl7kL6EqqV0NsBlI4rMlxdlbmM2fLnC1yuPHflRVdQ0F/exec';
+    
+    const DEFAULT_ROLES = {
+        "admin": { pass: "wangan999", name: "最高管理者 (擁有者)" },
+        "staff": { pass: "staff115", name: "一般員工 / 操作員" },
+        "guest": { pass: "guest888", name: "外部檢視者 (訪客)" }
+    };
+
+    const MINICOG_THEMES = {
+        "1": ["香蕉", "朝陽", "椅子"],
+        "2": ["領袖", "季節", "桌子"],
+        "3": ["村莊", "廚房", "嬰兒"],
+        "4": ["河流", "國家", "手指"],
+        "5": ["船長", "花園", "照片"],
+        "6": ["女兒", "天堂", "高山"]
+    };
+
+    const GDS_QUESTIONS = [
+        { q: "1. 基本上，您對您的生活滿意嗎？<br><span class='text-slate-400 text-xs'>(台：基本上，您對您的生活有滿意麼？)</span>", key: "否" },
+        { q: "2. 您是否減少附近的活動和興趣的事？<br><span class='text-slate-400 text-xs'>(台：您有減少真多的活動和趣味的事麼？)</span>", key: "是" },
+        { q: "3. 您是否覺得您的生活很空虛？<br><span class='text-slate-400 text-xs'>(台：您會感覺您的生活真實空虛麼？)</span>", key: "是" },
+        { q: "4. 您是否常常感到厭煩？<br><span class='text-slate-400 text-xs'>(台：您會常常感覺真煩麼？)</span>", key: "是" },
+        { q: "5. 您是否大部份時間精神都很好？<br><span class='text-slate-400 text-xs'>(台：您是不是大部份的時間精神攏真好？)</span>", key: "否" },
+        { q: "6. 您是否會常常害怕將有不幸的事情發生在您身上了嗎？<br><span class='text-slate-400 text-xs'>(台：您會驚說您會遇著不幸的事情麼？)</span>", key: "是" },
+        { q: "7. 您是否大部份的時間都感到快樂？<br><span class='text-slate-400 text-xs'>(台：您是不是大部份的時間攏感覺快樂？)</span>", key: "否" },
+        { q: "8. 您是否常常感到無論做什麼事，都沒有用？<br><span class='text-slate-400 text-xs'>(台：您會常常感覺不管做什麼事，攏無路用麼？)</span>", key: "是" },
+        { q: "9. 您是否比較喜歡待在家裡而較不喜歡外出及不喜歡做新的事？<br><span class='text-slate-400 text-xs'>(台：您會較愛待在厝裡，較不愛出外，亦不愛做未曾做過的事情麼？)</span>", key: "是" },
+        { q: "10. 您是否覺得現在有記憶力不好的困擾？<br><span class='text-slate-400 text-xs'>(台：您會感覺您比大部份的人有卡多記智不好的問題麼？)</span>", key: "是" },
+        { q: "11. 您是否覺得「現在還能活著」是很好的事？<br><span class='text-slate-400 text-xs'>(台：您會感覺「現在還能活著」真好？)</span>", key: "否" },
+        { q: "12. 您是否覺得您現在活得真沒有價值？<br><span class='text-slate-400 text-xs'>(台：您會感覺您現在活得真無價值麼？)</span>", key: "是" },
+        { q: "13. 您是否覺得精力很充沛？<br><span class='text-slate-400 text-xs'>(台：您會感覺真有氣力麼？)</span>", key: "否" },
+        { q: "14. 您是否感覺您現在的情況是沒有希望的？<br><span class='text-slate-400 text-xs'>(台：您會感覺您的情形是沒什麼希望的麼？)</span>", key: "是" },
+        { q: "15. 您是否覺得大部份的人都比您更幸福？<br><span class='text-slate-400 text-xs'>(台：您會感覺大部份的人攏比您卡好命麼？)</span>", key: "是" }
+    ];
+
+    const PHY_NORMS = {
+        chair: { '1': { '65':[13,15,18,22],'70':[12,14,17,21],'75':[11,12,16,19],'80':[10,12,15,17],'85':[8,10,13,16],'90':[6,8,11,14] }, '2': { '65':[11,14,16,20],'70':[10,13,15,19],'75':[9,12,14,18],'80':[8,11,13,16],'85':[3,9,12,15],'90':[0,6,11,14] } },
+        arm: { '1': { '65':[16,17,21,25],'70':[15,16,20,24],'75':[14,15,19,22],'80':[13,14,18,21],'85':[11,13,17,20],'90':[8,10,15,18] }, '2': { '65':[15,17,20,24],'70':[14,16,20,23],'75':[13,15,19,22],'80':[13,14,18,21],'85':[11,13,17,20],'90':[9,12,16,20] } },
+        grip: { 
+            '1': { '65':[30.2,34.41,37.85,41.96],'70':[26.21,31.41,34.7,39.19],'75':[22.1,26.87,31.13,35.02],'80':[20.3,24.71,29.32,33.72],'85':[17.25,21.01,24.29,29.12],'90':[17.25,21.01,24.29,29.12] },
+            '2': { '65':[18.13,20.6,22.85,25.63],'70':[16.75,19.65,21.9,24.7],'75':[15.57,18.2,20.6,23.2],'80':[13.89,16.39,18.85,21.6],'85':[10.52,13.86,16.4,19.25],'90':[10.52,13.86,16.4,19.25] }
+        }
+    };
+
+    let selectedMiniCogVersion = "1";
+    let MEMORY_USER_DB = {};
+    let currentRole = "";
+    let sppbGlobalTotal = 0;
+    let clockImageDataUrl = ""; 
+
+    function initUserDatabase() {
+        try {
+            if (typeof(Storage) !== "undefined") {
+                if (!localStorage.getItem('WANGAN_USER_DB')) {
+                    localStorage.setItem('WANGAN_USER_DB', JSON.stringify(DEFAULT_ROLES));
+                }
+                MEMORY_USER_DB = JSON.parse(localStorage.getItem('WANGAN_USER_DB'));
+            } else {
+                MEMORY_USER_DB = DEFAULT_ROLES;
+            }
+        } catch (e) {
+            MEMORY_USER_DB = DEFAULT_ROLES;
+        }
+    }
+
+    function getUserDB() {
+        const currentDB = (typeof(Storage) !== "undefined" && localStorage.getItem('WANGAN_USER_DB')) ? JSON.parse(localStorage.getItem('WANGAN_USER_DB')) : MEMORY_USER_DB;
+        return (currentDB && Object.keys(currentDB).length > 0) ? currentDB : DEFAULT_ROLES;
+    }
+
+    function saveUserDB(dbObj) {
+        MEMORY_USER_DB = dbObj;
+        try {
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem('WANGAN_USER_DB', JSON.stringify(dbObj));
+            }
+        } catch(e) {}
+    }
+
+    function checkLogin() {
+        const userInput = document.getElementById('login_user').value.trim().toLowerCase();
+        const passInput = document.getElementById('login_pass').value.trim();
+        const errorMsg = document.getElementById('login_error');
+        const loginScreen = document.getElementById('login-screen');
+        const mainSystem = document.getElementById('main-system');
+        const currentDB = getUserDB();
+
+        if (currentDB[userInput] && currentDB[userInput].pass === passInput) {
+            currentRole = userInput;
+            document.getElementById('current-role').innerText = currentDB[userInput].name;
+            applyPermissions();
+            loginScreen.classList.add('hidden');
+            mainSystem.classList.remove('opacity-0', 'pointer-events-none');
+            errorMsg.classList.add('hidden');
+        } else {
+            errorMsg.classList.remove('hidden');
+        }
+    }
+
+    function handleLogout() {
+        if(!confirm("確定要登出系統，返回登入畫面嗎？")) return;
+        currentRole = "";
+        const loginScreen = document.getElementById('login-screen');
+        const mainSystem = document.getElementById('main-system');
+        
+        mainSystem.classList.add('opacity-0', 'pointer-events-none');
+        loginScreen.classList.remove('hidden');
+        
+        document.getElementById('login_user').value = "";
+        document.getElementById('login_pass').value = "";
+        
+        document.getElementById('b_name').value = "";
+        document.getElementById('b_id').value = "";
+        document.getElementById('b_birthday').value = "";
+        document.getElementById('b_age').value = "65";
+        document.getElementById('b_phone').value = "";
+        document.getElementById('b_class').value = "";
+        document.getElementById('p_chair').value = "";
+        document.getElementById('p_arm').value = "";
+        document.getElementById('p_grip').value = "";
+        document.getElementById('p_gait').value = "";
+        document.getElementById('sppb_chair_time').value = "";
+        document.getElementById('dis_other_text').value = "";
+        document.getElementById('prob_other_text').value = "";
+        document.getElementById('b_self_fill').checked = false;
+        
+        document.querySelectorAll('.disease-cb, .prob-cb').forEach(cb => cb.checked = false);
+        
+        document.getElementById('final-report').classList.add('hidden');
+        document.getElementById('saveBtn').classList.add('hidden');
+        document.getElementById('mc-word-display').classList.add('hidden');
+        
+        clearClockImage(); 
+
+        for(let i=0; i<15; i++) {
+            const r否 = document.getElementsByName(`gds_${i}`)[1];
+            if(r否) r否.checked = true;
+        }
+        showTab('base');
+    }
+
+    function previewClockImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                clockImageDataUrl = e.target.result;
+                document.getElementById('clock_image_preview').src = clockImageDataUrl;
+                document.getElementById('clock_image_preview_container').classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function clearClockImage() {
+        clockImageDataUrl = "";
+        document.getElementById('clock_image_input').value = "";
+        document.getElementById('clock_image_preview').src = "";
+        document.getElementById('clock_image_preview_container').classList.add('hidden');
+    }
+
+    function calculateAge() {
+        const birthdayStr = document.getElementById('b_birthday').value;
+        if (!birthdayStr) return;
+        const birthDate = new Date(birthdayStr);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
+        document.getElementById('b_age').value = age >= 0 ? age : 65;
+        judgeAllPhy();
+    }
+
+    function toggleDiseaseNone(src) {
+        if (src.checked) {
+            document.querySelectorAll('.disease-cb').forEach(cb => { if(cb !== src) cb.checked = false; });
+            document.getElementById('dis_other_text').value = "";
+        }
+    }
+    
+    function toggleProbNone(src) {
+        if (src.checked) {
+            document.querySelectorAll('.prob-cb').forEach(cb => { if(cb !== src) cb.checked = false; });
+            document.getElementById('prob_other_text').value = "";
+        }
+    }
+
+    function updateMcRecallScore() {
+        const score = document.querySelectorAll('.mc-recall-cb:checked').length;
+        document.getElementById('mc_recall_score_display').innerText = score;
+        judgeAllPhy(); 
+    }
+
+    function setMiniCogTheme(v) {
+        selectedMiniCogVersion = v;
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = document.getElementById('mc' + v);
+        if(activeBtn) activeBtn.classList.add('active');
+
+        const words = MINICOG_THEMES[v];
+        const d = document.getElementById('mc-word-display');
+        d.innerText = `選用清單版號 ${v} ：  ${words.join('  、  ')}`;
+        d.classList.remove('hidden');
+        
+        const cbContainer = document.getElementById('mc_recall_checkboxes');
+        cbContainer.innerHTML = words.map((w, i) => `
+            <label class="bg-white p-2 border rounded-xl flex items-center justify-center gap-1.5 cursor-pointer font-bold shadow-sm hover:bg-emerald-50 transition">
+                <input type="checkbox" class="w-4 h-4 text-emerald-600 mc-recall-cb" value="${w}" onchange="updateMcRecallScore()"> ${w}
+            </label>
+        `).join('');
+        
+        updateMcRecallScore();
+        judgeAllPhy();
+    }
+
+    function judgeAllPhy() {
+        const g = document.getElementById('b_gender').value, a = parseInt(document.getElementById('b_age').value);
+        const k = a >= 90 ? '90' : (a >= 85 ? '85' : (a >= 80 ? '80' : (a >= 75 ? '75' : (a >= 70 ? '70' : '65'))));
+        
+        ['chair','arm','grip'].forEach(type => {
+            const val = parseFloat(document.getElementById('p_' + type).value) || 0;
+            const norm = PHY_NORMS[type][g][k];
+            let r = "不好", s = 0;
+            if(val >= norm[3]) { r = "很好"; s = 4; }
+            else if(val >= norm[2]) { r = "尚好"; s = 3; }
+            else if(val >= norm[1]) { r = "普通"; s = 2; }
+            else if(val >= norm[0]) { r = "稍差"; s = 1; }
+            document.getElementById('r_' + type).innerText = r + " (" + s + "分)";
+        });
+
+        const balA = parseInt(document.getElementById('sppb_bal_a').value) || 0;
+        const balC = parseInt(document.getElementById('sppb_bal_c').value) || 0;
+        const balTotalScore = balA + 1 + balC;
+
+        const gaitDistSelect = document.querySelector('input[name="sppb_gait_dist"]:checked');
+        const gaitDist = gaitDistSelect ? parseInt(gaitDistSelect.value) : 4;
+        const gaitSeconds = parseFloat(document.getElementById('p_gait').value) || 0;
+        let gaitScore = 0;
+
+        if (gaitSeconds > 0) {
+            if (gaitDist === 4) {
+                if (gaitSeconds < 4.82) gaitScore = 4;
+                else if (gaitSeconds <= 6.20) gaitScore = 3;
+                else if (gaitSeconds <= 8.70) gaitScore = 2;
+                else if (gaitSeconds > 8.70) gaitScore = 1;
+            } else {
+                if (gaitSeconds < 3.62) gaitScore = 4;
+                else if (gaitSeconds <= 4.65) gaitScore = 3;
+                else if (gaitSeconds <= 6.52) gaitScore = 2;
+                else if (gaitSeconds > 6.52) gaitScore = 1;
+            }
+        }
+        document.getElementById('sppb_gait_score').innerText = gaitScore + " 分";
+
+        const chairFiveSeconds = parseFloat(document.getElementById('sppb_chair_time').value) || 0;
+        let chairFiveScore = 0;
+        if (chairFiveSeconds > 0) {
+            if (chairFiveSeconds < 11.19) chairFiveScore = 4;
+            else if (chairFiveSeconds <= 13.69) chairFiveScore = 3;
+            else if (chairFiveSeconds <= 16.69) chairFiveScore = 2;
+            else if (chairFiveSeconds <= 59.90) chairFiveScore = 1;
+            else if (chairFiveSeconds > 60.00) chairFiveScore = 0;
+        }
+        document.getElementById('sppb_chair_score').innerText = chairFiveScore + " 分";
+
+        sppbGlobalTotal = balTotalScore + gaitScore + chairFiveScore;
+        document.getElementById('sppb_live_total').innerText = sppbGlobalTotal;
+    }
+
+    function generateFinalReport() {
+        const checkedBoxes = document.querySelectorAll('.mc-recall-cb:checked');
+        const mcRecallScore = checkedBoxes.length;
+        const mcClockScore = parseInt(document.getElementById('mc_clock_score_select').value) || 0;
+        const miniCogTotalScore = mcRecallScore + mcClockScore;
+        const pc = (miniCogTotalScore / 5) * 100;
+
+        const getV = (id) => { const text = document.getElementById(id).innerText; const match = text.match(/\d/); return match ? parseInt(match[0]) : 0; };
+        
+        const gaitSeconds = parseFloat(document.getElementById('p_gait').value) || 0;
+        let icopeGaitScore = 0;
+        if(gaitSeconds > 0) { if(gaitSeconds < 3.5) icopeGaitScore = 3; else if(gaitSeconds <= 4.9) icopeGaitScore = 2; else if(gaitSeconds <= 8.0) icopeGaitScore = 1; }
+
+        const sp = getV('r_chair') + getV('r_arm') + getV('r_grip') + icopeGaitScore;
+        const pp = (sp/15)*100;
+
+        let gdsRawScore = 0;
+        GDS_QUESTIONS.forEach((item, index) => {
+            const radios = document.getElementsByName(`gds_${index}`);
+            let selectedVal = "否";
+            for (const radio of radios) { if (radio.checked) { selectedVal = radio.value; break; } }
+            if (selectedVal === item.key) gdsRawScore += 1;
+        });
+
+        const ps = ((15 - gdsRawScore) / 15) * 100;
+        const total = (pc + pp + ps + (sppbGlobalTotal/12)*100) / 4;
+
+        document.getElementById('final-report').classList.remove('hidden');
+        if(currentRole === "admin" || currentRole === "staff") { document.getElementById('saveBtn').classList.remove('hidden'); }
+        
+        document.getElementById('rn').innerText = document.getElementById('b_name').value || "未命名受試者";
+        document.getElementById('rt').innerText = total.toFixed(1) + "%";
+        
+        const statusBox = document.getElementById('status_box');
+        if(total >= 70) {
+            document.getElementById('rs').innerText = "🎉 ICOPE 全人評估結論：行動能力正常";
+            statusBox.className = "p-3 rounded-xl text-center shadow-sm font-black text-white bg-green-600";
+        } else {
+            document.getElementById('rs').innerText = "⚠️ ICOPE 全人評估結論：具備衰弱風險";
+            statusBox.className = "p-3 rounded-xl text-center shadow-sm font-black text-white bg-amber-500";
+        }
+
+        const sppbStatusBox = document.getElementById('sppb_status_box');
+        if (sppbGlobalTotal >= 10) {
+            document.getElementById('sppb_rs').innerText = `💚 SPPB 身體表現：${sppbGlobalTotal} 分 (行動能力正常)`;
+            sppbStatusBox.className = "p-3 rounded-xl text-center shadow-sm font-black text-white bg-emerald-600";
+        } else {
+            document.getElementById('sppb_rs').innerText = `⚠️ SPPB 身體表現：${sppbGlobalTotal} 分 (具備行動能力障礙，請加強下肢核心)`;
+            sppbStatusBox.className = "p-3 rounded-xl text-center shadow-sm font-black text-white bg-red-500 animate-pulse";
+        }
+
+        const gdsStatusBox = document.getElementById('gds_status_box');
+        let diagnosisText = "";
+        if (miniCogTotalScore < 3) {
+            diagnosisText = `🚨 Mini-Cog 篩檢：${miniCogTotalScore} 分 (疑似認知障礙風險，強烈建議深度評估)`;
+            gdsStatusBox.className = "p-3 rounded-xl text-center shadow-sm font-black text-white bg-rose-600 text-xs animate-bounce";
+        } else {
+            diagnosisText = `💚 Mini-Cog 篩檢：${miniCogTotalScore} 分 (認知正常) | GDS-15 憂鬱：${gdsRawScore} 分`;
+            gdsStatusBox.className = "p-3 rounded-xl text-center shadow-sm font-black text-white bg-teal-600 text-xs";
+        }
+        document.getElementById('gds_rs').innerText = diagnosisText;
+                    
+        const bars = [
+            { n: "認知功能 (Mini-Cog)", p: pc },
+            { n: "肌力表現 (Phy)", p: pp },
+            { n: "下肢表現 (SPPB)", p: (sppbGlobalTotal/12)*100 },
+            { n: `心理社會 (Psy) - GDS健康度`, p: ps }
+        ];
+        document.getElementById('score_bars').innerHTML = bars.map(b => `
+            <div class="text-[11px] flex justify-between font-bold text-slate-500"><span>${b.n}</span><span class="${b.p < 70 ? 'text-red-500 font-black' : 'text-slate-700'}">${b.p.toFixed(0)}%</span></div>
+            <div class="bg-slate-100 h-2 rounded-full overflow-hidden mb-2 shadow-inner"><div class="${b.p < 70 ? 'bg-red-500' : 'bg-blue-600'} h-full transition-all duration-500" style="width:${b.p}%"></div></div>
+        `).join('');
+
+        ["rx_cog", "rx_phy", "rx_psy"].forEach(id => { document.getElementById(id).className = "p-3 bg-white rounded-xl border border-slate-200 flex gap-3 shadow-sm opacity-80"; });
+        ["badge_cog", "badge_phy", "badge_psy"].forEach(id => { if(document.getElementById(id)) document.getElementById(id).classList.add('hidden'); });
+
+        if (pc < 70 || miniCogTotalScore < 3) {
+            document.getElementById("rx_cog").className = "p-3 bg-red-50 rounded-xl border-2 border-red-300 flex gap-3 shadow-md animate-pulse";
+            document.getElementById("badge_cog").classList.remove('hidden');
+        }
+        if (pp < 70 || sppbGlobalTotal < 10) {
+            document.getElementById("rx_phy").className = "p-3 bg-red-50 rounded-xl border-2 border-red-300 flex gap-3 shadow-md animate-pulse";
+            document.getElementById("badge_phy").classList.remove('hidden');
+        }
+        if (ps < 70 || gdsRawScore > 6) {
+            document.getElementById("rx_psy").className = "p-3 bg-purple-50 rounded-xl border-2 border-purple-300 flex gap-3 shadow-md";
+            document.getElementById("badge_psy").classList.remove('hidden');
+            document.getElementById("badge_psy").innerText = gdsRawScore > 6 ? "憂鬱調節引導" : "優先加強";
+        }
+    }
+
+    async function submitToGoogle() {
+        if(currentRole !== "admin" && currentRole !== "staff") return alert("權限不足，無法執行同步。");
+        const btn = document.getElementById('saveBtn');
+        const nameVal = document.getElementById('b_name').value;
+        if(!nameVal) return alert("請填寫姓名！");
+        btn.disabled = true;
+        btn.innerHTML = "<i class='fa-solid fa-spinner animate-spin mr-2'></i>同步中...";
+
+        const stageVal = document.querySelector('input[name="b_stage"]:checked').value;
+        const diseaseArr = [];
+        document.querySelectorAll('.disease-cb:checked').forEach(cb => {
+            if(cb.value === "10.其他") diseaseArr.push("其他:" + document.getElementById('dis_other_text').value);
+            else diseaseArr.push(cb.value);
+        });
+        const probArr = [];
+        document.querySelectorAll('.prob-cb:checked').forEach(cb => {
+            if(cb.value === "7.其他") probArr.push("其他:" + document.getElementById('prob_other_text').value);
+            else probArr.push(cb.value);
+        });
+
+        const icopeData = [];
+        for(let i=1; i<=8; i++) {
+            const val = document.querySelector(`input[name="icope_${i}"]:checked`)?.value || '否';
+            icopeData.push(`Q${i}:${val}`);
+        }
+        const q5_1 = document.querySelector('input[name="icope_5_1"]:checked')?.value || '否';
+        if(document.querySelector('input[name="icope_5"]:checked')?.value === '是') {
+            icopeData.push(`Q5-1:${q5_1}`);
+        }
+
+        const mcStep1 = document.querySelector('input[name="mc_step1_status"]:checked').value;
+
+        const checkedBoxes = document.querySelectorAll('.mc-recall-cb:checked');
+        const mcRecallScore = checkedBoxes.length;
+        const rememberedWords = Array.from(checkedBoxes).map(cb => cb.value).join('、') || "無";
+        
+        const mcClockScore = parseInt(document.getElementById('mc_clock_score_select').value) || 0;
+        const miniCogTotalScore = mcRecallScore + mcClockScore;
+
+        const params = new URLSearchParams();
+        params.append('u_stage', stageVal);
+        params.append('u_date', document.getElementById('b_date').value);
+        params.append('u_class', document.getElementById('b_class').value);
+        params.append('u_name', nameVal);
+        params.append('u_id', document.getElementById('b_id').value);
+        params.append('u_gender', document.getElementById('b_gender').value);
+        params.append('u_birthday', document.getElementById('b_birthday').value);
+        params.append('u_age', document.getElementById('b_age').value);
+        params.append('u_phone', document.getElementById('b_phone').value);
+        params.append('u_location', document.getElementById('b_city').value + document.getElementById('b_district').value);
+        params.append('u_indigenous', document.querySelector('input[name="b_indigenous"]:checked').value);
+        params.append('u_living', document.querySelector('input[name="b_living"]:checked').value);
+        params.append('u_education', document.getElementById('b_education').value);
+        params.append('u_diseases', diseaseArr.join(','));
+        params.append('u_problems', probArr.join(','));
+        params.append('u_self_health', document.querySelector('input[name="b_self_health"]:checked').value);
+        params.append('u_self_fill', document.getElementById('b_self_fill').checked ? "是" : "否");
+
+        params.append('u_icope_self', icopeData.join(','));
+
+        params.append('u_sppb_total', sppbGlobalTotal);
+        params.append('u_sppb_bal_a', document.getElementById('sppb_bal_a').value);
+        params.append('u_sppb_bal_c', document.getElementById('sppb_bal_c').value);
+        params.append('u_chair_five_time', document.getElementById('sppb_chair_time').value);
+
+        params.append('u_total', document.getElementById('rt').innerText);
+        params.append('u_minicog_version', selectedMiniCogVersion);
+        
+        params.append('u_cog', `總分:${miniCogTotalScore} (複誦:${mcStep1}, 回憶:[${rememberedWords}])`);
+        
+        params.append('u_clock_image', clockImageDataUrl);
+        
+        let gdsRawScore = 0;
+        GDS_QUESTIONS.forEach((item, index) => {
+            const radios = document.getElementsByName(`gds_${index}`);
+            let selectedVal = "否";
+            for (const radio of radios) { if (radio.checked) { selectedVal = radio.value; break; } }
+            if (selectedVal === item.key) gdsRawScore += 1;
+        });
+        params.append('u_psy', gdsRawScore);
+        
+        params.append('u_chair', document.getElementById('p_chair').value);
+        params.append('u_arm', document.getElementById('p_arm').value);
+        params.append('u_grip', document.getElementById('p_grip').value);
+        params.append('u_gait', document.getElementById('p_gait').value);
+        params.append('u_status', document.getElementById('rs').innerText + " | " + document.getElementById('sppb_rs').innerText + " | " + document.getElementById('gds_rs').innerText);
+
+        try {
+            await fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+            alert("✅ 儲存成功！數據已同步至雲端。");
+            btn.innerHTML = "<i class='fa-solid fa-check-double mr-2'></i>已成功存檔";
+        } catch(e) {
+            alert("連線失敗，請檢查網路。");
+            btn.disabled = false;
+            btn.innerHTML = "<i class='fa-solid fa-arrow-rotate-right mr-2'></i>重試上傳";
+        }
+    }
+
+    function applyPermissions() {
+        const btnResult = document.getElementById('btn-result');
+        const actionPanel = document.getElementById('action-panel');
+        const adminPanel = document.getElementById('admin-management-panel');
+        if (currentRole === "admin") {
+            btnResult.style.display = "block"; actionPanel.style.display = "block"; adminPanel.classList.remove('hidden'); renderAccountList(); showTab('base');
+        } else if (currentRole === "staff") {
+            btnResult.style.display = "block"; actionPanel.style.display = "block"; adminPanel.classList.add('hidden'); showTab('base');
+        } else {
+            btnResult.style.display = "block"; actionPanel.style.display = "none"; adminPanel.classList.add('hidden'); document.getElementById('final-report').classList.remove('hidden'); showTab('result');
+        }
+    }
+
+    function addNewAccount() {
+        if(currentRole !== 'admin') return;
+        const newU = document.getElementById('new_username').value.trim().toLowerCase();
+        const newP = document.getElementById('new_password').value.trim();
+        const newR = document.getElementById('new_role').value;
+        if(!newU || !newP) return alert("請完整填寫新帳號與密碼！");
+        let currentDB = getUserDB();
+        if(currentDB[newU]) return alert("此帳號名稱已存在！");
+        const roleNames = { "staff": "一般員工 / 操作員", "guest": "外部檢視者 (訪客)" };
+        currentDB[newU] = { pass: newP, name: roleNames[newR] };
+        saveUserDB(currentDB);
+        alert(`✅ 帳號 [${newU}] 新增成功！`);
+        document.getElementById('new_username').value = ""; document.getElementById('new_password').value = ""; renderAccountList();
+    }
+
+    function renderAccountList() {
+        const currentDB = getUserDB();
+        const listDisplay = document.getElementById('account-list-display');
+        listDisplay.innerHTML = Object.keys(currentDB).map(username => {
+            let roleColor = username === 'admin' ? 'text-yellow-400' : (currentDB[username].name.includes('操作員') ? 'text-emerald-400' : 'text-blue-400');
+            return `<div class="flex justify-between items-center bg-slate-800 p-2 rounded border border-slate-700"><span>👤 帳號: <strong class="text-white">${username}</strong> (密碼: ${currentDB[username].pass})</span><span class="${roleColor} font-bold">${currentDB[username].name}</span></div>`;
+        }).join('');
+    }
+
+    function showTab(id) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        document.getElementById('btn-' + id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    window.onload = function() {
+        initUserDatabase();
+        document.getElementById('b_date').value = new Date().toISOString().split('T')[0];
+
+        setMiniCogTheme('1');
+
+        const container = document.getElementById('gds-questions-container');
+        container.innerHTML = GDS_QUESTIONS.map((item, index) => `
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center gap-4">
+                <div class="font-medium text-slate-800 leading-tight">${item.q}</div>
+                <div class="flex gap-2 shrink-0">
+                    <label class="flex items-center gap-1 cursor-pointer bg-white px-3 py-1.5 border rounded-lg hover:bg-blue-50">
+                        <input type="radio" name="gds_${index}" value="是" class="w-4 h-4 text-blue-600" required>
+                        <span class="font-bold text-xs text-slate-700">是</span>
+                    </label>
+                    <label class="flex items-center gap-1 cursor-pointer bg-white px-3 py-1.5 border rounded-lg hover:bg-blue-50">
+                        <input type="radio" name="gds_${index}" value="否" class="w-4 h-4 text-blue-600" checked>
+                        <span class="font-bold text-xs text-slate-700">否</span>
+                    </label>
+                </div>
+            </div>
+        `).join('');
+
+        document.getElementById('login_pass').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkLogin();
+        });
+    };
+</script>
+</body></html>
