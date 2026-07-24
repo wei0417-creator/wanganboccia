@@ -80,7 +80,8 @@
     </nav>
 
     <main class="container mx-auto px-4 py-6 max-w-2xl">    
-        <!-- 1. 基本資料 -->
+        
+        <!-- ================= 1. 基本資料 ================= -->
         <section id="tab-base" class="tab-content active space-y-4">        
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">            
                 <div class="flex justify-between items-center border-b pb-2">
@@ -180,7 +181,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <!-- 健康與疾病史 -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="border-b pb-1"><h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-notes-medical mr-2"></i>健康與疾病史項目</h3></div>
@@ -221,7 +222,7 @@
                 </div>
             </div>
 
-            <!-- 長者功能自評量表 -->
+            <!-- 長者功能自評量表 (ICOPE) -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="border-b pb-1">
                     <h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-clipboard-check mr-2"></i>長者功能自評量表 (長者自評版)</h3>
@@ -298,8 +299,8 @@
                 </div>
             </div>
         </section>
-        
-        <!-- 2. 行動力 (肌力與 SPPB) -->
+
+        <!-- ================= 2. 行動力 (肌力與 SPPB) ================= -->
         <section id="tab-phy" class="tab-content space-y-6">        
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="flex items-center gap-1 border-b pb-2"><span class="text-blue-800 text-lg"><i class="fa-solid fa-dumbbell"></i></span><h2 class="font-black text-blue-900 text-base"> 基礎功能常模測試</h2></div>
@@ -338,7 +339,10 @@
                         <div class="bg-white p-2.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
                             <div>B. 半並排站立 <span class="text-[10px] text-slate-400 block sm:inline sm:ml-1">(Semi-tandem stand)</span></div>
                             <div class="flex items-center gap-2">
-                                <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded font-bold">符合基準 (固定計 1 分)</span>
+                                <select id="sppb_bal_b" onchange="judgeAllPhy()" class="p-1.5 border rounded bg-slate-50 text-xs">
+                                    <option value="1">保持 10 秒 (1分)</option>
+                                    <option value="0">少於 10 秒 (0分)</option>
+                                </select>
                             </div>
                         </div>
                         <div class="bg-white p-2.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
@@ -378,7 +382,7 @@
             </div>
         </section>
 
-        <!-- 3. 認知力 (Mini-Cog™) -->
+        <!-- ================= 3. 認知力 (Mini-Cog™) ================= -->
         <section id="tab-cog" class="tab-content space-y-4">        
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">            
                 <div class="flex justify-between items-center border-b pb-2">
@@ -451,7 +455,7 @@
             </div>    
         </section>
 
-        <!-- 4. 社會參與力 (GDS) -->
+        <!-- ================= 4. 社會參與力 (GDS) ================= -->
         <section id="tab-psy" class="tab-content">
             <div class="bg-white p-6 rounded-2xl border border-purple-200 shadow-sm">
                 <div class="flex justify-between items-center border-b pb-2 mb-4">
@@ -463,7 +467,7 @@
             </div>
         </section>
         
-        <!-- 5. 三力處表 -->
+        <!-- ================= 5. 三力處表 ================= -->
         <section id="tab-result" class="tab-content space-y-6">
             <div id="action-panel" class="p-6 bg-blue-50 rounded-3xl border-2 border-blue-200 text-center space-y-4">
                 <button onclick="generateFinalReport()" class="w-full bg-blue-700 text-white font-black py-4 rounded-2xl shadow-xl hover:bg-blue-800 transition"><i class="fa-solid fa-chart-pie mr-2"></i>第一步：產生報表與三力學處方</button>
@@ -586,7 +590,7 @@
 
 <!-- ================= 💻 核心驅動引擎 ================= -->
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyDZLru4UqhdHZgYc1IB6sjvl7kL6EqqV0NsBlI4rMlxdlbmM2fLnC1yuPHflRVdQ0F/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz4Mgv3fGd56kUr4IrckpUDcbFNFUEcG3Ef7eUDDjNuulFaBLLRo4mdr28TNGyeaTqZOw/exec';
     
     const DEFAULT_ROLES = {
         "admin": { pass: "wangan999", name: "最高管理者 (擁有者)" },
@@ -817,8 +821,9 @@
         });
 
         const balA = parseInt(document.getElementById('sppb_bal_a').value) || 0;
+        const balB = parseInt(document.getElementById('sppb_bal_b').value) || 0;
         const balC = parseInt(document.getElementById('sppb_bal_c').value) || 0;
-        const balTotalScore = balA + 1 + balC;
+        const balTotalScore = balA + balB + balC;
 
         const gaitDistSelect = document.querySelector('input[name="sppb_gait_dist"]:checked');
         const gaitDist = gaitDistSelect ? parseInt(gaitDistSelect.value) : 4;
@@ -1008,6 +1013,7 @@
 
         params.append('u_sppb_total', sppbGlobalTotal);
         params.append('u_sppb_bal_a', document.getElementById('sppb_bal_a').value);
+        params.append('u_sppb_bal_b', document.getElementById('sppb_bal_b').value);
         params.append('u_sppb_bal_c', document.getElementById('sppb_bal_c').value);
         params.append('u_chair_five_time', document.getElementById('sppb_chair_time').value);
 
