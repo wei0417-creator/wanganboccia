@@ -954,22 +954,29 @@
     async function submitToGoogle() {
         if(currentRole !== "admin" && currentRole !== "staff") return alert("權限不足，無法執行同步。");
         const btn = document.getElementById('saveBtn');
-        const nameVal = document.getElementById('b_name').value;
-        if(!nameVal) return alert("請填寫姓名！");
-        btn.disabled = true;
-        btn.innerHTML = "<i class='fa-solid fa-spinner animate-spin mr-2'></i>同步中...";
+        
+        const nameVal = document.getElementById('b_name')?.value || "";
+        if(!nameVal) {
+            alert("請填寫姓名！");
+            return;
+        }
+        
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = "<i class='fa-solid fa-spinner animate-spin mr-2'></i>同步中...";
+        }
 
-        // [這裡已修復] 加上 optional chaining (?.)，若該元素不存在會回傳 "未選擇" 或空字串
         const stageVal = document.querySelector('input[name="b_stage"]:checked')?.value || "未選擇";
         
         const diseaseArr = [];
         document.querySelectorAll('.disease-cb:checked').forEach(cb => {
-            if(cb.value === "10.其他") diseaseArr.push("其他:" + document.getElementById('dis_other_text').value);
+            if(cb.value === "10.其他") diseaseArr.push("其他:" + (document.getElementById('dis_other_text')?.value || "無"));
             else diseaseArr.push(cb.value);
         });
+        
         const probArr = [];
         document.querySelectorAll('.prob-cb:checked').forEach(cb => {
-            if(cb.value === "7.其他") probArr.push("其他:" + document.getElementById('prob_other_text').value);
+            if(cb.value === "7.其他") probArr.push("其他:" + (document.getElementById('prob_other_text')?.value || "無"));
             else probArr.push(cb.value);
         });
 
@@ -983,70 +990,71 @@
             icopeData.push(`Q5-1:${q5_1}`);
         }
 
-        // [這裡已修復]
         const mcStep1 = document.querySelector('input[name="mc_step1_status"]:checked')?.value || "未選擇";
 
         const checkedBoxes = document.querySelectorAll('.mc-recall-cb:checked');
         const mcRecallScore = checkedBoxes.length;
         const rememberedWords = Array.from(checkedBoxes).map(cb => cb.value).join('、') || "無";
         
-        const mcClockScore = parseInt(document.getElementById('mc_clock_score_select').value) || 0;
+        const mcClockScore = parseInt(document.getElementById('mc_clock_score_select')?.value) || 0;
         const miniCogTotalScore = mcRecallScore + mcClockScore;
 
         const params = new URLSearchParams();
         params.append('u_stage', stageVal);
-        params.append('u_date', document.getElementById('b_date').value || "");
-        params.append('u_class', document.getElementById('b_class').value || "");
+        params.append('u_date', document.getElementById('b_date')?.value || "");
+        params.append('u_class', document.getElementById('b_class')?.value || "");
         params.append('u_name', nameVal);
-        params.append('u_id', document.getElementById('b_id').value || "");
-        params.append('u_gender', document.getElementById('b_gender').value || "");
-        params.append('u_birthday', document.getElementById('b_birthday').value || "");
-        params.append('u_age', document.getElementById('b_age').value || "");
-        params.append('u_phone', document.getElementById('b_phone').value || "");
-        params.append('u_location', (document.getElementById('b_city').value || "") + (document.getElementById('b_district').value || ""));
+        params.append('u_id', document.getElementById('b_id')?.value || "");
+        params.append('u_gender', document.getElementById('b_gender')?.value || "");
+        params.append('u_birthday', document.getElementById('b_birthday')?.value || "");
+        params.append('u_age', document.getElementById('b_age')?.value || "");
+        params.append('u_phone', document.getElementById('b_phone')?.value || "");
+        params.append('u_location', (document.getElementById('b_city')?.value || "") + (document.getElementById('b_district')?.value || ""));
         
-        // [這裡已修復] 防呆
         params.append('u_indigenous', document.querySelector('input[name="b_indigenous"]:checked')?.value || "未選擇");
         params.append('u_living', document.querySelector('input[name="b_living"]:checked')?.value || "未選擇");
-        
-        params.append('u_education', document.getElementById('b_education').value || "");
+        params.append('u_education', document.getElementById('b_education')?.value || "");
         params.append('u_diseases', diseaseArr.join(','));
         params.append('u_problems', probArr.join(','));
         
-        // [這裡已修復] 最大肇因：原本去抓了不存在的 b_self_health
         params.append('u_self_health', document.querySelector('input[name="b_self_health"]:checked')?.value || "無此欄位");
-        
-        params.append('u_self_fill', document.getElementById('b_self_fill').checked ? "是" : "否");
+        params.append('u_self_fill', document.getElementById('b_self_fill')?.checked ? "是" : "否");
 
         params.append('u_icope_self', icopeData.join(','));
 
-        params.append('u_sppb_total', sppbGlobalTotal);
-        params.append('u_sppb_bal_a', document.getElementById('sppb_bal_a').value);
-        params.append('u_sppb_bal_b', document.getElementById('sppb_bal_b').value);
-        params.append('u_sppb_bal_c', document.getElementById('sppb_bal_c').value);
-        params.append('u_chair_five_time', document.getElementById('sppb_chair_time').value);
+        params.append('u_sppb_total', sppbGlobalTotal || 0);
+        params.append('u_sppb_bal_a', document.getElementById('sppb_bal_a')?.value || 0);
+        params.append('u_sppb_bal_b', document.getElementById('sppb_bal_b')?.value || 0);
+        params.append('u_sppb_bal_c', document.getElementById('sppb_bal_c')?.value || 0);
+        params.append('u_chair_five_time', document.getElementById('sppb_chair_time')?.value || 0);
 
-        params.append('u_total', document.getElementById('rt').innerText);
-        params.append('u_minicog_version', selectedMiniCogVersion);
+        params.append('u_total', document.getElementById('rt')?.innerText || "");
+        params.append('u_minicog_version', selectedMiniCogVersion || "1");
         
         params.append('u_cog', `總分:${miniCogTotalScore} (複誦:${mcStep1}, 回憶:[${rememberedWords}])`);
         
-        params.append('u_clock_image', clockImageDataUrl);
+        params.append('u_clock_image', clockImageDataUrl || "");
         
         let gdsRawScore = 0;
-        GDS_QUESTIONS.forEach((item, index) => {
-            const radios = document.getElementsByName(`gds_${index}`);
-            let selectedVal = "否";
-            for (const radio of radios) { if (radio.checked) { selectedVal = radio.value; break; } }
-            if (selectedVal === item.key) gdsRawScore += 1;
-        });
+        if (typeof GDS_QUESTIONS !== 'undefined') {
+            GDS_QUESTIONS.forEach((item, index) => {
+                const radios = document.getElementsByName(`gds_${index}`);
+                let selectedVal = "否";
+                for (const radio of radios) { if (radio.checked) { selectedVal = radio.value; break; } }
+                if (selectedVal === item.key) gdsRawScore += 1;
+            });
+        }
         params.append('u_psy', gdsRawScore);
         
-        params.append('u_chair', document.getElementById('p_chair').value);
-        params.append('u_arm', document.getElementById('p_arm').value);
-        params.append('u_grip', document.getElementById('p_grip').value);
-        params.append('u_gait', document.getElementById('p_gait').value);
-        params.append('u_status', document.getElementById('rs').innerText + " | " + document.getElementById('sppb_rs').innerText + " | " + document.getElementById('gds_rs').innerText);
+        params.append('u_chair', document.getElementById('p_chair')?.value || 0);
+        params.append('u_arm', document.getElementById('p_arm')?.value || 0);
+        params.append('u_grip', document.getElementById('p_grip')?.value || 0);
+        params.append('u_gait', document.getElementById('p_gait')?.value || 0);
+        
+        const statusStr = (document.getElementById('rs')?.innerText || "") + " | " + 
+                          (document.getElementById('sppb_rs')?.innerText || "") + " | " + 
+                          (document.getElementById('gds_rs')?.innerText || "");
+        params.append('u_status', statusStr);
 
         try {
             await fetch(scriptURL, {
@@ -1056,11 +1064,13 @@
                 body: params.toString()
             });
             alert("✅ 儲存成功！數據已同步至雲端。");
-            btn.innerHTML = "<i class='fa-solid fa-check-double mr-2'></i>已成功存檔";
+            if (btn) btn.innerHTML = "<i class='fa-solid fa-check-double mr-2'></i>已成功存檔";
         } catch(e) {
             alert("連線失敗，請檢查網路。");
-            btn.disabled = false;
-            btn.innerHTML = "<i class='fa-solid fa-arrow-rotate-right mr-2'></i>重試上傳";
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = "<i class='fa-solid fa-arrow-rotate-right mr-2'></i>重試上傳";
+            }
         }
     }
 
