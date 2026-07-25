@@ -101,7 +101,6 @@
                         <input type="date" id="b_date" class="w-full p-1.5 border rounded bg-white text-xs font-bold">
                     </div>
                     
-                    <!-- ================= 修訂為下拉式選單 ================= -->
                     <div class="col-span-2">
                         <label class="text-xs font-black text-slate-500 block mb-1">開課地點</label>
                         <select id="b_class" class="w-full p-2 border rounded bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 font-bold">
@@ -112,7 +111,6 @@
                             <option value="西衛社區發展協會">西衛社區發展協會</option>
                         </select>
                     </div>
-                    <!-- ================================================== -->
 
                 </div>
                 <div class="space-y-3">
@@ -921,8 +919,11 @@
         const ps = ((15 - gdsRawScore) / 15) * 100;
         const total = (pc + pp + ps + (sppbGlobalTotal/12)*100) / 4;
 
+        const db = getUserDB();
+        const isOperator = currentRole === "admin" || (db[currentRole] && db[currentRole].name.includes('操作員'));
+
         document.getElementById('final-report').classList.remove('hidden');
-        if(currentRole === "admin" || currentRole === "staff") { document.getElementById('saveBtn').classList.remove('hidden'); }
+        if(isOperator) { document.getElementById('saveBtn').classList.remove('hidden'); }
         
         document.getElementById('rn').innerText = document.getElementById('b_name').value || "未命名受試者";
         document.getElementById('rt').innerText = total.toFixed(1) + "%";
@@ -986,7 +987,10 @@
     }
 
     async function submitToGoogle() {
-        if(currentRole !== "admin" && currentRole !== "staff") return alert("權限不足，無法執行同步。");
+        const db = getUserDB();
+        const isOperator = currentRole === "admin" || (db[currentRole] && db[currentRole].name.includes('操作員'));
+
+        if(!isOperator) return alert("權限不足，無法執行同步。");
         const btn = document.getElementById('saveBtn');
         
         const nameVal = document.getElementById('b_name')?.value || "";
@@ -1163,9 +1167,14 @@
         const btnResult = document.getElementById('btn-result');
         const actionPanel = document.getElementById('action-panel');
         const adminPanel = document.getElementById('admin-management-panel');
-        if (currentRole === "admin") {
+        
+        const db = getUserDB();
+        const isAdmin = currentRole === "admin";
+        const isOperator = db[currentRole] && db[currentRole].name.includes('操作員');
+
+        if (isAdmin) {
             btnResult.style.display = "block"; actionPanel.style.display = "block"; adminPanel.classList.remove('hidden'); renderAccountList(); showTab('base');
-        } else if (currentRole === "staff") {
+        } else if (isOperator) {
             btnResult.style.display = "block"; actionPanel.style.display = "block"; adminPanel.classList.add('hidden'); showTab('base');
         } else {
             btnResult.style.display = "block"; actionPanel.style.display = "none"; adminPanel.classList.add('hidden'); document.getElementById('final-report').classList.remove('hidden'); showTab('result');
