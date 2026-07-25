@@ -43,8 +43,10 @@
                 </div>
             </div>
         </div>
-        <button onclick="checkLogin()" class="w-full bg-blue-700 text-white font-black py-3 rounded-xl shadow-lg hover:bg-blue-800 transition text-sm tracking-wider">
-            <i class="fa-solid fa-right-to-bracket mr-2"></i>安全登入系統
+        
+        <!-- 【登入按鈕】：預設鎖定，等雲端帳號載入完畢才會解開 -->
+        <button id="login_btn" disabled onclick="checkLogin()" class="w-full bg-blue-700 text-white font-black py-3 rounded-xl shadow-lg hover:bg-blue-800 transition text-sm tracking-wider disabled:bg-slate-400 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-spinner animate-spin mr-2"></i>連線雲端資料庫中...
         </button>
         <p id="login_error" class="text-xs text-red-600 font-bold hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i>帳號或密碼錯誤，請重新輸入</p>
     </div>
@@ -582,11 +584,11 @@
                         </select>
                     </div>
                 </div>
-                <button onclick="addNewAccount()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl transition text-xs shadow-md">
+                <button id="add_account_btn" onclick="addNewAccount()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl transition text-xs shadow-md">
                     <i class="fa-solid fa-user-plus mr-1"></i>確認新增此帳號
                 </button>
                 <div class="pt-2">
-                    <p class="text-[10px] font-bold text-slate-400 mb-1.5"><i class="fa-solid fa-list mr-1"></i>現存用戶清單：</p>
+                    <p class="text-[10px] font-bold text-slate-400 mb-1.5"><i class="fa-solid fa-list mr-1"></i>現存雲端用戶清單：</p>
                     <div id="account-list-display" class="space-y-1 max-h-[120px] overflow-y-auto text-[11px] pr-1"></div>
                 </div>
             </div>
@@ -599,12 +601,12 @@
 
 <!-- ================= 💻 核心驅動引擎 ================= -->
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxSECLrLHycn66ror3Ap6wsJM3vE3JGtRGRFSij_-rlAbg8kfy3J8kzmGy1KF-7cIfl/exec';
+    // ⚠️ 請務必替換為你 Google Apps Script 重新部署後產生的「全新網址」
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwIOxJZ1TQTKszVsyqCIC9SFy9bHq9QFbAZzis0f2G6daOiY4OpNbyXDJWH4WBPSw4I/exec';
     
     const DEFAULT_ROLES = {
         "admin": { pass: "wangan999", name: "最高管理者 (擁有者)" },
-        "staff": { pass: "staff115", name: "一般員工 / 操作員" },
-        "guest": { pass: "guest888", name: "外部檢視者 (訪客)" }
+        "staff": { pass: "staff115", name: "一般員工 / 操作員" }
     };
 
     const MINICOG_THEMES = {
@@ -649,33 +651,24 @@
     let sppbGlobalTotal = 0;
     let clockImageDataUrl = ""; 
 
-    function initUserDatabase() {
+    // ========== 【新功能】網頁打開時，從雲端下載最新帳號清單 ==========
+    async function loadCloudAccounts() {
         try {
-            if (typeof(Storage) !== "undefined") {
-                if (!localStorage.getItem('WANGAN_USER_DB')) {
-                    localStorage.setItem('WANGAN_USER_DB', JSON.stringify(DEFAULT_ROLES));
-                }
-                MEMORY_USER_DB = JSON.parse(localStorage.getItem('WANGAN_USER_DB'));
-            } else {
-                MEMORY_USER_DB = DEFAULT_ROLES;
-            }
-        } catch (e) {
+            const response = await fetch(scriptURL);
+            const data = await response.json();
+            MEMORY_USER_DB = data;
+            
+            // 下載成功，解開登入按鈕
+            const loginBtn = document.getElementById('login_btn');
+            loginBtn.innerText = "安全登入系統";
+            loginBtn.disabled = false;
+        } catch (error) {
+            console.error("載入雲端帳號失敗，切換為預設離線帳號", error);
             MEMORY_USER_DB = DEFAULT_ROLES;
+            const loginBtn = document.getElementById('login_btn');
+            loginBtn.innerText = "安全登入系統 (離線模式)";
+            loginBtn.disabled = false;
         }
-    }
-
-    function getUserDB() {
-        const currentDB = (typeof(Storage) !== "undefined" && localStorage.getItem('WANGAN_USER_DB')) ? JSON.parse(localStorage.getItem('WANGAN_USER_DB')) : MEMORY_USER_DB;
-        return (currentDB && Object.keys(currentDB).length > 0) ? currentDB : DEFAULT_ROLES;
-    }
-
-    function saveUserDB(dbObj) {
-        MEMORY_USER_DB = dbObj;
-        try {
-            if (typeof(Storage) !== "undefined") {
-                localStorage.setItem('WANGAN_USER_DB', JSON.stringify(dbObj));
-            }
-        } catch(e) {}
     }
 
     function checkLogin() {
@@ -684,11 +677,10 @@
         const errorMsg = document.getElementById('login_error');
         const loginScreen = document.getElementById('login-screen');
         const mainSystem = document.getElementById('main-system');
-        const currentDB = getUserDB();
 
-        if (currentDB[userInput] && currentDB[userInput].pass === passInput) {
+        if (MEMORY_USER_DB[userInput] && MEMORY_USER_DB[userInput].pass === passInput) {
             currentRole = userInput;
-            document.getElementById('current-role').innerText = currentDB[userInput].name;
+            document.getElementById('current-role').innerText = MEMORY_USER_DB[userInput].name;
             applyPermissions();
             loginScreen.classList.add('hidden');
             mainSystem.classList.remove('opacity-0', 'pointer-events-none');
@@ -919,8 +911,7 @@
         const ps = ((15 - gdsRawScore) / 15) * 100;
         const total = (pc + pp + ps + (sppbGlobalTotal/12)*100) / 4;
 
-        const db = getUserDB();
-        const isOperator = currentRole === "admin" || (db[currentRole] && db[currentRole].name.includes('操作員'));
+        const isOperator = currentRole === "admin" || (MEMORY_USER_DB[currentRole] && MEMORY_USER_DB[currentRole].name.includes('操作員'));
 
         document.getElementById('final-report').classList.remove('hidden');
         if(isOperator) { document.getElementById('saveBtn').classList.remove('hidden'); }
@@ -987,8 +978,7 @@
     }
 
     async function submitToGoogle() {
-        const db = getUserDB();
-        const isOperator = currentRole === "admin" || (db[currentRole] && db[currentRole].name.includes('操作員'));
+        const isOperator = currentRole === "admin" || (MEMORY_USER_DB[currentRole] && MEMORY_USER_DB[currentRole].name.includes('操作員'));
 
         if(!isOperator) return alert("權限不足，無法執行同步。");
         const btn = document.getElementById('saveBtn');
@@ -1104,7 +1094,6 @@
             alert("✅ 儲存成功！數據已同步至雲端。");
             if (btn) btn.innerHTML = "<i class='fa-solid fa-check-double mr-2'></i>已成功存檔";
             
-            // 存檔成功後，顯示「新增下一位長者」的按鈕
             document.getElementById('nextBtn').classList.remove('hidden');
 
         } catch(e) {
@@ -1120,13 +1109,12 @@
     function resetForm() {
         if(!confirm("確定要清空目前畫面資料，開始新增下一位長者嗎？")) return;
         
-        // 1. 清空文字與數字輸入框
         document.getElementById('b_name').value = "";
         document.getElementById('b_id').value = "";
         document.getElementById('b_birthday').value = "";
-        document.getElementById('b_age').value = "65"; // 回復預設年齡
+        document.getElementById('b_age').value = "65"; 
         document.getElementById('b_phone').value = "";
-        document.getElementById('b_class').value = ""; // 重設為預設選項
+        document.getElementById('b_class').value = ""; 
         document.getElementById('p_chair').value = "";
         document.getElementById('p_arm').value = "";
         document.getElementById('p_grip').value = "";
@@ -1136,20 +1124,16 @@
         document.getElementById('prob_other_text').value = "";
         document.getElementById('b_self_fill').checked = false;
         
-        // 2. 清空所有勾選項
         document.querySelectorAll('.disease-cb, .prob-cb').forEach(cb => cb.checked = false);
         
-        // 3. 清空時鐘照片與認知測驗
         clearClockImage();
-        setMiniCogTheme('1'); // 重設回第一版並重新計算分數
+        setMiniCogTheme('1'); 
         
-        // 4. 重設 GDS-15 社會參與力預設選項為「否」
         for(let i=0; i<15; i++) {
             const r否 = document.getElementsByName(`gds_${i}`)[1];
             if(r否) r否.checked = true;
         }
 
-        // 5. 隱藏報表區塊與上傳相關按鈕
         document.getElementById('final-report').classList.add('hidden');
         document.getElementById('nextBtn').classList.add('hidden');
         
@@ -1158,7 +1142,6 @@
         saveBtn.innerHTML = "<i class='fa-solid fa-cloud-arrow-up mr-2'></i>第二步：上傳資料至試算表";
         saveBtn.classList.add('hidden');
         
-        // 6. 自動切換回第一頁 (基本資料) 並捲動到最上面
         showTab('base');
         window.scrollTo(0,0);
     }
@@ -1168,9 +1151,8 @@
         const actionPanel = document.getElementById('action-panel');
         const adminPanel = document.getElementById('admin-management-panel');
         
-        const db = getUserDB();
         const isAdmin = currentRole === "admin";
-        const isOperator = db[currentRole] && db[currentRole].name.includes('操作員');
+        const isOperator = MEMORY_USER_DB[currentRole] && MEMORY_USER_DB[currentRole].name.includes('操作員');
 
         if (isAdmin) {
             btnResult.style.display = "block"; actionPanel.style.display = "block"; adminPanel.classList.remove('hidden'); renderAccountList(); showTab('base');
@@ -1181,27 +1163,54 @@
         }
     }
 
-    function addNewAccount() {
+    // ========== 【新功能】新增帳號並同步寫入雲端 ==========
+    async function addNewAccount() {
         if(currentRole !== 'admin') return;
         const newU = document.getElementById('new_username').value.trim().toLowerCase();
         const newP = document.getElementById('new_password').value.trim();
         const newR = document.getElementById('new_role').value;
         if(!newU || !newP) return alert("請完整填寫新帳號與密碼！");
-        let currentDB = getUserDB();
-        if(currentDB[newU]) return alert("此帳號名稱已存在！");
+        
+        if(MEMORY_USER_DB[newU]) return alert("此帳號名稱已存在！");
+        
+        const btn = document.getElementById('add_account_btn');
+        btn.disabled = true;
+        btn.innerText = "雲端新增中...";
+
         const roleNames = { "staff": "一般員工 / 操作員", "guest": "外部檢視者 (訪客)" };
-        currentDB[newU] = { pass: newP, name: roleNames[newR] };
-        saveUserDB(currentDB);
-        alert(`✅ 帳號 [${newU}] 新增成功！`);
-        document.getElementById('new_username').value = ""; document.getElementById('new_password').value = ""; renderAccountList();
+        const newName = roleNames[newR];
+
+        const params = new URLSearchParams();
+        params.append('action', 'addAccount');
+        params.append('new_user', newU);
+        params.append('new_pass', newP);
+        params.append('new_name', newName);
+
+        try {
+            await fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+            // 寫入本機快取以便即時顯示
+            MEMORY_USER_DB[newU] = { pass: newP, name: newName };
+            alert(`✅ 帳號 [${newU}] 已成功新增至雲端！\n以後換電腦也能直接登入囉！`);
+            document.getElementById('new_username').value = ""; 
+            document.getElementById('new_password').value = ""; 
+            renderAccountList();
+        } catch(e) {
+            alert("新增失敗，請檢查網路連線。");
+        }
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus mr-1"></i>確認新增此帳號';
     }
 
     function renderAccountList() {
-        const currentDB = getUserDB();
         const listDisplay = document.getElementById('account-list-display');
-        listDisplay.innerHTML = Object.keys(currentDB).map(username => {
-            let roleColor = username === 'admin' ? 'text-yellow-400' : (currentDB[username].name.includes('操作員') ? 'text-emerald-400' : 'text-blue-400');
-            return `<div class="flex justify-between items-center bg-slate-800 p-2 rounded border border-slate-700"><span>👤 帳號: <strong class="text-white">${username}</strong> (密碼: ${currentDB[username].pass})</span><span class="${roleColor} font-bold">${currentDB[username].name}</span></div>`;
+        listDisplay.innerHTML = Object.keys(MEMORY_USER_DB).map(username => {
+            let roleColor = username === 'admin' ? 'text-yellow-400' : (MEMORY_USER_DB[username].name.includes('操作員') ? 'text-emerald-400' : 'text-blue-400');
+            return `<div class="flex justify-between items-center bg-slate-800 p-2 rounded border border-slate-700"><span>👤 帳號: <strong class="text-white">${username}</strong> (密碼: ${MEMORY_USER_DB[username].pass})</span><span class="${roleColor} font-bold">${MEMORY_USER_DB[username].name}</span></div>`;
         }).join('');
     }
 
@@ -1214,7 +1223,7 @@
     }
 
     window.onload = function() {
-        initUserDatabase();
+        loadCloudAccounts(); // 網頁載入時直接從雲端下載帳號庫
         document.getElementById('b_date').value = new Date().toISOString().split('T')[0];
 
         setMiniCogTheme('1');
