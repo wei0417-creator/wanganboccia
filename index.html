@@ -100,10 +100,20 @@
                         <label class="text-xs font-black text-slate-500 block mb-1">填寫日期 (國曆)</label>
                         <input type="date" id="b_date" class="w-full p-1.5 border rounded bg-white text-xs font-bold">
                     </div>
+                    
+                    <!-- ================= 修訂為下拉式選單 ================= -->
                     <div class="col-span-2">
-                        <label class="text-xs font-black text-slate-500 block mb-1">開課班級</label>
-                        <input type="text" id="b_class" class="w-full p-2 border rounded bg-white text-sm" placeholder="請輸入班級名稱">
+                        <label class="text-xs font-black text-slate-500 block mb-1">開課地點</label>
+                        <select id="b_class" class="w-full p-2 border rounded bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                            <option value="" disabled selected>請選擇開課地點</option>
+                            <option value="中社社區發展協會">中社社區發展協會</option>
+                            <option value="東衛社區發展協會">東衛社區發展協會</option>
+                            <option value="吉貝惜福長青協會">吉貝惜福長青協會</option>
+                            <option value="西衛社區發展協會">西衛社區發展協會</option>
+                        </select>
                     </div>
+                    <!-- ================================================== -->
+
                 </div>
                 <div class="space-y-3">
                     <div class="grid grid-cols-2 gap-3">
@@ -1112,6 +1122,7 @@
         document.getElementById('b_birthday').value = "";
         document.getElementById('b_age').value = "65"; // 回復預設年齡
         document.getElementById('b_phone').value = "";
+        document.getElementById('b_class').value = ""; // 重設為預設選項
         document.getElementById('p_chair').value = "";
         document.getElementById('p_arm').value = "";
         document.getElementById('p_grip').value = "";
