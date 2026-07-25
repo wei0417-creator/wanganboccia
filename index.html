@@ -616,7 +616,7 @@
         { q: "6. 您是否會常常害怕將有不幸的事情發生在您身上了嗎？<br><span class='text-slate-400 text-xs'>(台：您會驚說您會遇著不幸的事情麼？)</span>", key: "是" },
         { q: "7. 您是否大部份的時間都感到快樂？<br><span class='text-slate-400 text-xs'>(台：您是不是大部份的時間攏感覺快樂？)</span>", key: "否" },
         { q: "8. 您是否常常感到無論做什麼事，都沒有用？<br><span class='text-slate-400 text-xs'>(台：您會常常感覺不管做什麼事，攏無路用麼？)</span>", key: "是" },
-        { q: "9. 您是否比較喜歡待在家裡而較不喜歡外出及不喜歡做新的事？<br><span class='text-slate-400 text-xs'>(台：您會較愛待在厝裡，較不愛出外，亦不愛做未曾做過的事情麼？)</span>", key: "是" },
+        { q: "9. 您是否比較喜歡待在家裡而較不喜歡外出及不喜歡做新的事？<br><span class='text-slate-400 text-xs'>(台：您會較愛待在厝裡，較不出外，亦不愛做未曾做過的事情麼？)</span>", key: "是" },
         { q: "10. 您是否覺得現在有記憶力不好的困擾？<br><span class='text-slate-400 text-xs'>(台：您會感覺您比大部份的人有卡多記智不好的問題麼？)</span>", key: "是" },
         { q: "11. 您是否覺得「現在還能活著」是很好的事？<br><span class='text-slate-400 text-xs'>(台：您會感覺「現在還能活著」真好？)</span>", key: "否" },
         { q: "12. 您是否覺得您現在活得真沒有價值？<br><span class='text-slate-400 text-xs'>(台：您會感覺您現在活得真無價值麼？)</span>", key: "是" },
@@ -959,7 +959,9 @@
         btn.disabled = true;
         btn.innerHTML = "<i class='fa-solid fa-spinner animate-spin mr-2'></i>同步中...";
 
-        const stageVal = document.querySelector('input[name="b_stage"]:checked').value;
+        // [這裡已修復] 加上 optional chaining (?.)，若該元素不存在會回傳 "未選擇" 或空字串
+        const stageVal = document.querySelector('input[name="b_stage"]:checked')?.value || "未選擇";
+        
         const diseaseArr = [];
         document.querySelectorAll('.disease-cb:checked').forEach(cb => {
             if(cb.value === "10.其他") diseaseArr.push("其他:" + document.getElementById('dis_other_text').value);
@@ -981,7 +983,8 @@
             icopeData.push(`Q5-1:${q5_1}`);
         }
 
-        const mcStep1 = document.querySelector('input[name="mc_step1_status"]:checked').value;
+        // [這裡已修復]
+        const mcStep1 = document.querySelector('input[name="mc_step1_status"]:checked')?.value || "未選擇";
 
         const checkedBoxes = document.querySelectorAll('.mc-recall-cb:checked');
         const mcRecallScore = checkedBoxes.length;
@@ -992,21 +995,27 @@
 
         const params = new URLSearchParams();
         params.append('u_stage', stageVal);
-        params.append('u_date', document.getElementById('b_date').value);
-        params.append('u_class', document.getElementById('b_class').value);
+        params.append('u_date', document.getElementById('b_date').value || "");
+        params.append('u_class', document.getElementById('b_class').value || "");
         params.append('u_name', nameVal);
-        params.append('u_id', document.getElementById('b_id').value);
-        params.append('u_gender', document.getElementById('b_gender').value);
-        params.append('u_birthday', document.getElementById('b_birthday').value);
-        params.append('u_age', document.getElementById('b_age').value);
-        params.append('u_phone', document.getElementById('b_phone').value);
-        params.append('u_location', document.getElementById('b_city').value + document.getElementById('b_district').value);
-        params.append('u_indigenous', document.querySelector('input[name="b_indigenous"]:checked').value);
-        params.append('u_living', document.querySelector('input[name="b_living"]:checked').value);
-        params.append('u_education', document.getElementById('b_education').value);
+        params.append('u_id', document.getElementById('b_id').value || "");
+        params.append('u_gender', document.getElementById('b_gender').value || "");
+        params.append('u_birthday', document.getElementById('b_birthday').value || "");
+        params.append('u_age', document.getElementById('b_age').value || "");
+        params.append('u_phone', document.getElementById('b_phone').value || "");
+        params.append('u_location', (document.getElementById('b_city').value || "") + (document.getElementById('b_district').value || ""));
+        
+        // [這裡已修復] 防呆
+        params.append('u_indigenous', document.querySelector('input[name="b_indigenous"]:checked')?.value || "未選擇");
+        params.append('u_living', document.querySelector('input[name="b_living"]:checked')?.value || "未選擇");
+        
+        params.append('u_education', document.getElementById('b_education').value || "");
         params.append('u_diseases', diseaseArr.join(','));
         params.append('u_problems', probArr.join(','));
-        params.append('u_self_health', document.querySelector('input[name="b_self_health"]:checked').value);
+        
+        // [這裡已修復] 最大肇因：原本去抓了不存在的 b_self_health
+        params.append('u_self_health', document.querySelector('input[name="b_self_health"]:checked')?.value || "無此欄位");
+        
         params.append('u_self_fill', document.getElementById('b_self_fill').checked ? "是" : "否");
 
         params.append('u_icope_self', icopeData.join(','));
