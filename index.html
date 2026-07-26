@@ -230,9 +230,20 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ================= 【新增】自覺健康狀況 ================= -->
+                <div class="space-y-1.5 border-t border-slate-100 pt-3">
+                    <label class="text-xs font-black text-slate-600 block">◎ 自覺健康狀況：</label>
+                    <div class="flex gap-6 text-xs font-bold p-3 bg-slate-50 rounded-xl border">
+                        <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 hover:text-blue-600"><input type="radio" name="b_self_health" value="1.良好" class="w-4 h-4 text-blue-600"> 1.良好</label>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 hover:text-blue-600"><input type="radio" name="b_self_health" value="2.普通" class="w-4 h-4 text-blue-600" checked> 2.普通</label>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 hover:text-blue-600"><input type="radio" name="b_self_health" value="3.不佳" class="w-4 h-4 text-blue-600"> 3.不佳</label>
+                    </div>
+                </div>
+                <!-- ========================================================= -->
             </div>
 
-            <!-- ================= 【更新】長者功能自評量表 (ICOPE) ================= -->
+            <!-- ================= 長者功能自評量表 (ICOPE) ================= -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="border-b pb-1">
                     <h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-clipboard-check mr-2"></i>ICOPE 自評題目</h3>
@@ -781,6 +792,10 @@
         
         document.querySelectorAll('.disease-cb, .prob-cb').forEach(cb => cb.checked = false);
         
+        // 重置自覺健康狀況預設為普通
+        const selfHealthRadios = document.getElementsByName('b_self_health');
+        if(selfHealthRadios.length > 1) selfHealthRadios[1].checked = true;
+
         // 重設 ICOPE
         document.querySelectorAll('input[type="radio"][name^="icope_"]').forEach(el => {
             if(el.value === '否') el.checked = true;
@@ -1201,6 +1216,10 @@
         
         document.querySelectorAll('.disease-cb, .prob-cb').forEach(cb => cb.checked = false);
         
+        // 重置自覺健康狀況預設為普通
+        const selfHealthRadios = document.getElementsByName('b_self_health');
+        if(selfHealthRadios.length > 1) selfHealthRadios[1].checked = true;
+
         // 重新設定 ICOPE 到預設值
         document.querySelectorAll('input[type="radio"][name^="icope_"]').forEach(el => {
             if(el.value === '否') el.checked = true;
