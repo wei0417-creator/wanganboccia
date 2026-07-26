@@ -232,82 +232,144 @@
                 </div>
             </div>
 
-            <!-- 長者功能自評量表 (ICOPE) -->
+            <!-- ================= 【更新】長者功能自評量表 (ICOPE) ================= -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="border-b pb-1">
-                    <h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-clipboard-check mr-2"></i>長者功能自評量表 (長者自評版)</h3>
+                    <h3 class="font-black text-blue-900 text-sm"><i class="fa-solid fa-clipboard-check mr-2"></i>ICOPE 自評題目</h3>
                 </div>
-                <p class="text-xs text-slate-500 mb-2">請引導長輩依據過去三個月至一年的狀況回答下列問題：</p>
+                <p class="text-xs text-slate-500 mb-2">請引導長輩依據過去狀況回答下列問題：</p>
                 
-                <div class="space-y-3">
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">1. (認知功能) 您最近一年來，是否有記憶明顯減退的情形？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_1" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_1" value="否" checked> 否</label>
+                <div class="space-y-4">
+                    <!-- 認知功能 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-l-4 border-l-blue-500">
+                        <h4 class="text-xs font-black text-blue-800 mb-2">● 認知功能</h4>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <label class="text-xs font-bold text-slate-700">1. 最近一年來是否有記憶明顯減退的情形？</label>
+                            <div class="flex gap-4 text-xs font-bold shrink-0">
+                                <label class="cursor-pointer text-red-600"><input type="radio" name="icope_cog" value="是"> 是</label>
+                                <label class="cursor-pointer text-green-700"><input type="radio" name="icope_cog" value="否" checked> 否</label>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">2. (行動功能) 您是否出現以下任一種情況？(非常擔心跌倒 / 過去一年內曾跌倒 / 需抓東西才能站起)</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_2" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_2" value="否" checked> 否</label>
+
+                    <!-- 行動功能 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-l-4 border-l-green-500">
+                        <h4 class="text-xs font-black text-green-800 mb-2">● 行動功能</h4>
+                        <p class="text-xs font-bold text-slate-600 mb-2">椅子起身測試：12 秒內，雙手抱胸，連續起立坐下 5 次。</p>
+                        <div class="space-y-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-bold text-slate-700">1. 需要幾秒？</label>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <input type="number" id="icope_mob_time" class="w-20 p-1.5 border rounded bg-white text-xs font-bold text-center" placeholder="秒數">
+                                    <span class="text-xs font-bold text-slate-600">秒</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-bold text-slate-700">2. 是否大於 12 秒？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_mob" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_mob" value="否" checked> 否</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">3. (營養不良) 在非刻意減重的情況下，過去三個月，您的體重是否減輕3公斤或以上？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_3" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_3" value="否" checked> 否</label>
+
+                    <!-- 營養不良 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-l-4 border-l-yellow-500">
+                        <h4 class="text-xs font-black text-yellow-800 mb-2">● 營養不良</h4>
+                        <div class="space-y-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-bold text-slate-700">1. 在非刻意減重情況下，過去三個月，您的體重是否減輕了 3 公斤以上？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_mal_1" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_mal_1" value="否" checked> 否</label>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-bold text-slate-700">2. 過去三個月，您是否曾經食慾不好？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_mal_2" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_mal_2" value="否" checked> 否</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">4. (營養不良) 過去三個月，您是否曾經食慾不好？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_4" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_4" value="否" checked> 否</label>
+
+                    <!-- 視力障礙 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-l-4 border-l-purple-500">
+                        <h4 class="text-xs font-black text-purple-800 mb-2">● 視力障礙</h4>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <label class="text-xs font-bold text-slate-700">1. 您的眼睛看遠、看近或閱讀是否有困難？</label>
+                            <div class="flex gap-4 text-xs font-bold shrink-0">
+                                <label class="cursor-pointer text-red-600"><input type="radio" name="icope_vis" value="是"> 是</label>
+                                <label class="cursor-pointer text-green-700"><input type="radio" name="icope_vis" value="否" checked> 否</label>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">5. (視力障礙) 您的眼睛看遠、看近或閱讀是否有困難？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_5" value="是" onchange="document.getElementById('icope_5_1_box').classList.remove('hidden')"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_5" value="否" checked onchange="document.getElementById('icope_5_1_box').classList.add('hidden')"> 否</label>
+
+                    <!-- 聽力障礙 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-l-4 border-l-orange-500">
+                        <h4 class="text-xs font-black text-orange-800 mb-2">● 聽力障礙</h4>
+                        <p class="text-xs font-bold text-slate-700 mb-2">1. 您的聽力是否出現以下 "任一種" 情況？</p>
+                        <div class="space-y-2 pl-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-medium text-slate-700">(1) 電話或手機交談時聽不清楚，或因為沒聽到鈴聲常漏接電話？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_hea_1" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_hea_1" value="否" checked> 否</label>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-medium text-slate-700">(2) 看電視/聽收音機時，常被家人或朋友說音量開太大聲？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_hea_2" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_hea_2" value="否" checked> 否</label>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-medium text-slate-700">(3) 與人交談時，常需要對方提高說話音量或再說一次</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_hea_3" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_hea_3" value="否" checked> 否</label>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-medium text-slate-700">(4) 因為聽力問題而不想去參加朋友聚會或活動？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_hea_4" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_hea_4" value="否" checked> 否</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div id="icope_5_1_box" class="bg-red-50 p-3 rounded-xl border border-red-200 hidden ml-4">
-                        <label class="text-xs font-bold text-red-800 block mb-2">5-1. (視力延伸) 您過去1年是否"曾"接受眼睛檢查？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_5_1" value="是" checked> 是</label>
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_5_1" value="否"> 否 (異常)</label>
+
+                    <!-- 憂鬱 -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-l-4 border-l-gray-500">
+                        <h4 class="text-xs font-black text-gray-800 mb-2">● 憂鬱</h4>
+                        <div class="space-y-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-bold text-slate-700">1. 過去兩週，您是否常感到厭煩(心煩或台語「阿雜」)，或覺得生活沒有希望？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_dep_1" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_dep_1" value="否" checked> 否</label>
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-bold text-slate-700">2. 過去兩週，您是否減少很多的活動和興趣的事？</label>
+                                <div class="flex gap-4 text-xs font-bold shrink-0">
+                                    <label class="cursor-pointer text-red-600"><input type="radio" name="icope_dep_2" value="是"> 是</label>
+                                    <label class="cursor-pointer text-green-700"><input type="radio" name="icope_dep_2" value="否" checked> 否</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">6. (聽力障礙) 您的聽力是否出現以下任一種情況？(聽不清/開太大聲/需提高音量/因聽力不想參加活動)</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_6" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_6" value="否" checked> 否</label>
-                        </div>
-                    </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">7. (憂鬱) 過去兩週，您是否常感到厭煩(心煩或「阿雜」)，或覺得生活沒有希望？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_7" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_7" value="否" checked> 否</label>
-                        </div>
-                    </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-slate-700 block mb-2">8. (憂鬱) 過去兩週，您是否減少很多的活動和原本您感興趣的事？</label>
-                        <div class="flex gap-4 text-xs font-bold">
-                            <label class="cursor-pointer text-red-600"><input type="radio" name="icope_8" value="是"> 是 (異常)</label>
-                            <label class="cursor-pointer text-green-700"><input type="radio" name="icope_8" value="否" checked> 否</label>
-                        </div>
-                    </div>
+                    
                     <div class="text-[10px] text-slate-400 bg-slate-100 p-2 rounded">
                         * 以上功能評估結果如有異常，可於回診時請教醫師，或查找長者社區資源整合運用平台。
                     </div>
                 </div>
             </div>
+            <!-- ========================================================================= -->
         </section>
 
         <!-- ================= 2. 行動力 (肌力與 SPPB) ================= -->
@@ -602,7 +664,7 @@
 <!-- ================= 💻 核心驅動引擎 ================= -->
 <script>
     // ⚠️ 請務必替換為你 Google Apps Script 重新部署後產生的「全新網址」
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwIOxJZ1TQTKszVsyqCIC9SFy9bHq9QFbAZzis0f2G6daOiY4OpNbyXDJWH4WBPSw4I/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxSECLrLHycn66ror3Ap6wsJM3vE3JGtRGRFSij_-rlAbg8kfy3J8kzmGy1KF-7cIfl/exec';
     
     const DEFAULT_ROLES = {
         "admin": { pass: "wangan999", name: "最高管理者 (擁有者)" },
@@ -651,7 +713,7 @@
     let sppbGlobalTotal = 0;
     let clockImageDataUrl = ""; 
 
-    // ========== 【新功能】網頁打開時，從雲端下載最新帳號清單 ==========
+    // ========== 網頁打開時，從雲端下載最新帳號清單 ==========
     async function loadCloudAccounts() {
         try {
             const response = await fetch(scriptURL);
@@ -719,6 +781,13 @@
         
         document.querySelectorAll('.disease-cb, .prob-cb').forEach(cb => cb.checked = false);
         
+        // 重設 ICOPE
+        document.querySelectorAll('input[type="radio"][name^="icope_"]').forEach(el => {
+            if(el.value === '否') el.checked = true;
+        });
+        const mobTime = document.getElementById('icope_mob_time');
+        if (mobTime) mobTime.value = "";
+
         document.getElementById('final-report').classList.add('hidden');
         document.getElementById('saveBtn').classList.add('hidden');
         document.getElementById('nextBtn').classList.add('hidden');
@@ -1008,15 +1077,20 @@
             else probArr.push(cb.value);
         });
 
+        // 重新擷取新的 ICOPE 資料格式
         const icopeData = [];
-        for(let i=1; i<=8; i++) {
-            const val = document.querySelector(`input[name="icope_${i}"]:checked`)?.value || '否';
-            icopeData.push(`Q${i}:${val}`);
-        }
-        const q5_1 = document.querySelector('input[name="icope_5_1"]:checked')?.value || '否';
-        if(document.querySelector('input[name="icope_5"]:checked')?.value === '是') {
-            icopeData.push(`Q5-1:${q5_1}`);
-        }
+        icopeData.push(`認知Q1:` + (document.querySelector('input[name="icope_cog"]:checked')?.value || '否'));
+        icopeData.push(`行動Q1:` + (document.getElementById('icope_mob_time')?.value || '0') + '秒');
+        icopeData.push(`行動Q2:` + (document.querySelector('input[name="icope_mob"]:checked')?.value || '否'));
+        icopeData.push(`營養Q1:` + (document.querySelector('input[name="icope_mal_1"]:checked')?.value || '否'));
+        icopeData.push(`營養Q2:` + (document.querySelector('input[name="icope_mal_2"]:checked')?.value || '否'));
+        icopeData.push(`視力Q1:` + (document.querySelector('input[name="icope_vis"]:checked')?.value || '否'));
+        icopeData.push(`聽力(1):` + (document.querySelector('input[name="icope_hea_1"]:checked')?.value || '否'));
+        icopeData.push(`聽力(2):` + (document.querySelector('input[name="icope_hea_2"]:checked')?.value || '否'));
+        icopeData.push(`聽力(3):` + (document.querySelector('input[name="icope_hea_3"]:checked')?.value || '否'));
+        icopeData.push(`聽力(4):` + (document.querySelector('input[name="icope_hea_4"]:checked')?.value || '否'));
+        icopeData.push(`憂鬱Q1:` + (document.querySelector('input[name="icope_dep_1"]:checked')?.value || '否'));
+        icopeData.push(`憂鬱Q2:` + (document.querySelector('input[name="icope_dep_2"]:checked')?.value || '否'));
 
         const mcStep1 = document.querySelector('input[name="mc_step1_status"]:checked')?.value || "未選擇";
 
@@ -1094,6 +1168,7 @@
             alert("✅ 儲存成功！數據已同步至雲端。");
             if (btn) btn.innerHTML = "<i class='fa-solid fa-check-double mr-2'></i>已成功存檔";
             
+            // 存檔成功後，顯示「新增下一位長者」的按鈕
             document.getElementById('nextBtn').classList.remove('hidden');
 
         } catch(e) {
@@ -1126,6 +1201,13 @@
         
         document.querySelectorAll('.disease-cb, .prob-cb').forEach(cb => cb.checked = false);
         
+        // 重新設定 ICOPE 到預設值
+        document.querySelectorAll('input[type="radio"][name^="icope_"]').forEach(el => {
+            if(el.value === '否') el.checked = true;
+        });
+        const mobTime = document.getElementById('icope_mob_time');
+        if (mobTime) mobTime.value = "";
+
         clearClockImage();
         setMiniCogTheme('1'); 
         
@@ -1163,7 +1245,7 @@
         }
     }
 
-    // ========== 【新功能】新增帳號並同步寫入雲端 ==========
+    // ========== 新增帳號並同步寫入雲端 ==========
     async function addNewAccount() {
         if(currentRole !== 'admin') return;
         const newU = document.getElementById('new_username').value.trim().toLowerCase();
